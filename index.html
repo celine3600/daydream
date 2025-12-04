@@ -3,554 +3,1799 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daydream Knowledge Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Daydream TD Plugin</title>
+  <meta name="description" content="Stream real-time AI generation directly from TouchDesigner">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+  
+  <!-- React -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
+  
   <style>
-    :root {
-      --bg-primary: #0c0c0c;
-      --bg-card: #141414;
-      --bg-card-hover: #1a1a1a;
-      --border-color: #2a2a2a;
-      --text-primary: #ffffff;
-      --text-secondary: #b3b3b3;
-      --text-muted: #808080;
-      --accent-orange: #e8734a;
-      --accent-coral: #e8734a;
-    }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      background-color: #0a0a0a;
+      color: #e5e5e5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
     }
-
-    /* Glow Effects */
-    .glow-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
+    
+    #root {
+      min-height: 100vh;
     }
-
-    .glow-orb {
-      position: absolute;
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #444;
+    }
+    
+    /* Range input styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: #333;
+      border-radius: 3px;
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #8b5cf6;
       border-radius: 50%;
-      filter: blur(80px);
-    }
-
-    .glow-orb-1 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(232, 115, 74, 0.4) 0%, rgba(232, 115, 74, 0.1) 40%, transparent 70%);
-      top: -100px;
-      right: -100px;
-    }
-
-    .glow-orb-2 {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(56, 189, 189, 0.25) 0%, rgba(56, 189, 189, 0.05) 40%, transparent 70%);
-      top: 100px;
-      left: -100px;
-    }
-
-    .glow-orb-3 {
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(232, 115, 74, 0.15) 0%, transparent 60%);
-      top: 50%;
-      right: 10%;
-    }
-
-    /* Header */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 72px;
-      background: rgba(12, 12, 12, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      padding: 0 40px;
-    }
-
-    .header-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: 0.5px;
-      color: var(--text-primary);
-    }
-
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      position: relative;
-    }
-
-    .logo-icon::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #ff6b4a 0%, #e8734a 50%, #d4623d 100%);
-    }
-
-    .logo-icon::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4ecdc4 0%, #45b7aa 100%);
-      top: 4px;
-      left: 4px;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .header-nav a {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .header-nav a:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .header-nav a svg {
-      width: 18px;
-      height: 18px;
-      opacity: 0.8;
-    }
-
-    .btn-signup {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: transparent;
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-      margin-left: 16px;
-    }
-
-    .btn-signup:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: #404040;
-    }
-
-    /* Main Content */
-    main {
-      position: relative;
-      z-index: 1;
-      padding-top: 72px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 40px;
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-
-    .hero h1 {
-      font-size: 56px;
-      font-weight: 600;
-      line-height: 1.1;
-      margin-bottom: 24px;
-      letter-spacing: -0.02em;
-    }
-
-    .hero h1 .white {
-      color: var(--text-primary);
-    }
-
-    .hero h1 .gradient {
-      background: linear-gradient(
-        90deg,
-        #60a5fa 0%,
-        #4ecdc4 15%,
-        #34d399 30%,
-        #a3e635 45%,
-        #facc15 60%,
-        #f97316 75%,
-        #ef4444 90%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    /* Cards Grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 32px;
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      background: var(--bg-card-hover);
-      border-color: #363636;
-    }
-
-    .card-icon {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-icon svg {
-      width: 32px;
-      height: 32px;
-      stroke: var(--text-secondary);
-      stroke-width: 1.5;
-      fill: none;
-    }
-
-    .card h3 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      color: var(--text-primary);
-    }
-
-    .card p {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      margin-bottom: 24px;
-    }
-
-    .card-links {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--accent-orange);
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .card-link:hover {
-      opacity: 0.8;
-    }
-
-    .card-link::before {
-      content: '→';
-      font-size: 14px;
-    }
-
-    /* Chat Widget */
-    .chat-widget {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-      border: 1px solid #3a3a3a;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       cursor: pointer;
-      z-index: 100;
-      transition: all 0.2s;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
-
-    .chat-widget:hover {
-      transform: scale(1.05);
-      border-color: #4a4a4a;
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: #8b5cf6;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
     }
-
-    .chat-widget svg {
-      width: 28px;
-      height: 28px;
-      fill: var(--accent-orange);
+    
+    /* Select styling */
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px !important;
     }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 40px;
-      }
-
-      .header-nav {
-        display: none;
-      }
+    
+    /* Remove focus outlines, add custom */
+    input:focus, select:focus, textarea:focus, button:focus {
+      outline: none;
+      border-color: #8b5cf6 !important;
     }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 60px 20px;
-      }
-
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      .hero p {
-        font-size: 16px;
-      }
+    
+    /* Animation keyframes */
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Glow Effects -->
-  <div class="glow-container">
-    <div class="glow-orb glow-orb-1"></div>
-    <div class="glow-orb glow-orb-2"></div>
-    <div class="glow-orb glow-orb-3"></div>
-  </div>
+  <div id="root"></div>
+  
+  <script type="text/babel" data-type="module">
+    const { useState, useEffect } = React;
+    const { 
+      Play, Square, Circle, Upload, Share2, AlertCircle, HelpCircle, 
+      LogOut, ChevronDown, ChevronRight, Plus, Minus, Video, ExternalLink, 
+      CheckCircle, X, Clock, Zap, Users, TrendingUp, Settings, Eye, EyeOff 
+    } = lucideReact;
 
-  <!-- Header -->
-  <header>
-    <div class="header-content">
-      <a href="#" class="logo">
-        <div class="logo-icon"></div>
-        DAYDREAM
-      </a>
-
-      <nav class="header-nav">
-        <a href="#">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-            <polyline points="9,22 9,12 15,12 15,22"/>
-          </svg>
-          Home
-        </a>
-        <a href="#">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-          </svg>
-          Learn
-        </a>
-        <a href="#">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="16,18 22,12 16,6"/>
-            <polyline points="8,6 2,12 8,18"/>
-          </svg>
-          Build
-        </a>
-        <a href="#">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Research
-        </a>
-      </nav>
-
-      <a href="#" class="btn-signup">Sign Up for Daydream</a>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main>
-    <div class="container">
-      <!-- Hero Section -->
-      <section class="hero">
-        <h1>
-          <span class="white">Daydream </span><span class="gradient">Knowledge Hub</span>
-        </h1>
-        <p>Learn to create real-time AI visuals in TouchDesigner, run cutting-edge models locally with Scope, and ship creative apps using the Daydream API. Stay current on the latest world model and real-time video generation research.</p>
-      </section>
-
-      <!-- Cards Grid -->
-      <section class="cards-grid">
-        <div class="card">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-            </svg>
+    // Tracking Event Logger Component
+    const EventLogger = ({ events }) => {
+      return (
+        <div style={{
+          position: 'fixed',
+          bottom: 80,
+          right: 20,
+          width: 380,
+          maxHeight: 500,
+          backgroundColor: '#1a1a1a',
+          border: '1px solid #333',
+          borderRadius: 12,
+          padding: 16,
+          overflowY: 'auto',
+          fontFamily: 'monospace',
+          fontSize: 11,
+          zIndex: 1000,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
+        }}>
+          <div style={{ 
+            color: '#e5e5e5', 
+            marginBottom: 12, 
+            fontWeight: 'bold',
+            fontSize: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8
+          }}>
+            📊 TRACKING EVENTS
+            <span style={{ 
+              marginLeft: 'auto', 
+              fontSize: 10, 
+              color: '#666',
+              backgroundColor: '#0a0a0a',
+              padding: '2px 8px',
+              borderRadius: 4
+            }}>
+              {events.length} events
+            </span>
           </div>
-          <h3>Create Live Visuals</h3>
-          <p>Real-time AI visuals powered by StreamDiffusion, SDXL, and IPAdapter—using TouchDesigner or the browser-based Playground</p>
-          <div class="card-links">
-            <a href="#" class="card-link">Start with Daydream Playground</a>
-            <a href="#" class="card-link">Explore TouchDesigner Plugin</a>
-          </div>
+          {events.slice().reverse().map((event, i) => (
+            <div key={i} style={{
+              color: event.type === 'success' ? '#4ade80' : 
+                     event.type === 'stream' ? '#60a5fa' : 
+                     event.type === 'warning' ? '#fb923c' :
+                     event.type === 'engagement' ? '#a78bfa' :
+                     '#fbbf24',
+              marginBottom: 6,
+              padding: 8,
+              backgroundColor: '#0a0a0a',
+              borderRadius: 6,
+              fontSize: 10,
+              borderLeft: `3px solid ${
+                event.type === 'success' ? '#4ade80' : 
+                event.type === 'stream' ? '#60a5fa' : 
+                event.type === 'warning' ? '#fb923c' :
+                event.type === 'engagement' ? '#a78bfa' :
+                '#fbbf24'
+              }`
+            }}>
+              <div style={{ marginBottom: 2 }}>
+                <span style={{ color: '#666' }}>[{event.timestamp}]</span>
+              </div>
+              <div>{event.message}</div>
+              {event.metadata && (
+                <div style={{ marginTop: 4, color: '#666', fontSize: 9 }}>
+                  {event.metadata}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+      );
+    };
 
-        <div class="card">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24">
-              <rect x="4" y="4" width="16" height="16" rx="2"/>
-              <rect x="9" y="9" width="6" height="6"/>
-              <line x1="9" y1="1" x2="9" y2="4"/>
-              <line x1="15" y1="1" x2="15" y2="4"/>
-              <line x1="9" y1="20" x2="9" y2="23"/>
-              <line x1="15" y1="20" x2="15" y2="23"/>
-              <line x1="20" y1="9" x2="23" y2="9"/>
-              <line x1="20" y1="15" x2="23" y2="15"/>
-              <line x1="1" y1="9" x2="4" y2="9"/>
-              <line x1="1" y1="15" x2="4" y2="15"/>
-            </svg>
-          </div>
-          <h3>Run Models Locally</h3>
-          <p>Run Krea Realtime, LongLive, and StreamDiffusionV2 on your own GPU with full control over pipelines. Cloud GPUs supported.</p>
-          <div class="card-links">
-            <a href="#" class="card-link">Start with Scope (Local or Cloud)</a>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24">
-              <polyline points="16,18 22,12 16,6"/>
-              <polyline points="8,6 2,12 8,18"/>
-            </svg>
-          </div>
-          <h3>Build with the API</h3>
-          <p>Build StreamDiffusion-powered web and mobile apps with our hosted infrastructure and performant API—no GPUs required.</p>
-          <div class="card-links">
-            <a href="#" class="card-link">API Quickstart</a>
-            <a href="#" class="card-link">API Reference</a>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-          </div>
-          <h3>Stay Current</h3>
-          <p>Explore the latest research on world models, real-time video generation, and AI-powered creative tools from leading labs.</p>
-          <div class="card-links">
-            <a href="#" class="card-link">Research Papers</a>
-            <a href="#" class="card-link">Community Blog</a>
-          </div>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <!-- Chat Widget -->
-  <div class="chat-widget">
-    <svg viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-      <path d="M12 2a10 10 0 0 0-10 10c0 2.5.9 4.8 2.4 6.5l-1.9 1.9c-.4.4-.1 1.1.4 1.1H12c5.5 0 10-4.5 10-10S17.5 2 12 2z" fill="none"/>
-      <ellipse cx="12" cy="10" rx="8" ry="6" fill="none" stroke="currentColor" stroke-width="1"/>
-      <circle cx="8" cy="10" r="1"/>
-      <circle cx="12" cy="10" r="1"/>
-      <circle cx="16" cy="10" r="1"/>
-    </svg>
-  </div>
-
-  <script>
-    // Subtle parallax effect for glow orbs
-    document.addEventListener('mousemove', (e) => {
-      const orbs = document.querySelectorAll('.glow-orb');
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
+    // Classification Badge Component
+    const ClassificationBadge = ({ classification }) => {
+      const config = {
+        'Highly Successful': { color: '#22c55e', emoji: '🎯', bg: '#15803d20' },
+        'Moderately Successful': { color: '#3b82f6', emoji: '📊', bg: '#1e40af20' },
+        'Unsuccessful': { color: '#ef4444', emoji: '📉', bg: '#991b1b20' }
+      };
       
-      orbs.forEach((orb, index) => {
-        const speed = (index + 1) * 10;
-        const xOffset = (x - 0.5) * speed;
-        const yOffset = (y - 0.5) * speed;
-        orb.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+      const { color, emoji, bg } = config[classification] || config['Unsuccessful'];
+      
+      return (
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '6px 12px',
+          borderRadius: 8,
+          backgroundColor: bg,
+          border: `1px solid ${color}40`,
+          fontSize: 11,
+          fontWeight: 600,
+          color
+        }}>
+          {emoji} {classification}
+        </div>
+      );
+    };
+
+    const DaydreamPluginMockup = () => {
+      // State Management
+      const [isAuthenticated, setIsAuthenticated] = useState(false);
+      const [authStep, setAuthStep] = useState('initial');
+      const [isStreaming, setIsStreaming] = useState(false);
+      const [isRecording, setIsRecording] = useState(false);
+      const [activeTab, setActiveTab] = useState('stream');
+      const [showAuthModal, setShowAuthModal] = useState(false);
+      const [showReportModal, setShowReportModal] = useState(false);
+      const [showShareModal, setShowShareModal] = useState(false);
+      const [showEventLogger, setShowEventLogger] = useState(false);
+      const [streamDuration, setStreamDuration] = useState(0);
+      const [recordingDuration, setRecordingDuration] = useState(0);
+      const [events, setEvents] = useState([]);
+      const [recordedClips, setRecordedClips] = useState([]);
+      const [selectedClip, setSelectedClip] = useState(null);
+      const [sessionEngagement, setSessionEngagement] = useState({
+        paramChanges: 0,
+        promptChanges: 0,
+        totalStreamTime: 0,
+        streamSessions: 0,
+        recordingsMade: 0,
+        sharesCompleted: 0
       });
-    });
+      const [disconnectReason, setDisconnectReason] = useState(null);
+      const [userClassification, setUserClassification] = useState('Unsuccessful');
+
+      // Plugin Settings State
+      const [settings, setSettings] = useState({
+        model: 'stabilityai/sdxl-turbo',
+        width: 1024,
+        height: 576,
+        prompt: 'a beautiful landscape with mountains and rivers',
+        promptWeight: 1,
+        seed: 241633,
+        seedWeight: 1,
+        steps: 1,
+        guidanceScale: 1,
+        ipAdapterEnabled: false,
+        ipAdapterWeight: 0,
+        ipAdapterImage: '',
+        controlNetActive: false,
+        controlNetModels: []
+      });
+
+      const [expandedSections, setExpandedSections] = useState({
+        prompts: true,
+        seed: false,
+        advanced: false,
+        controlNet: false,
+        ipAdapter: false
+      });
+
+      // Brand Colors
+      const colors = {
+        background: '#0a0a0a',
+        surface: '#1a1a1a',
+        surfaceHover: '#252525',
+        border: '#333',
+        primary: '#8b5cf6',
+        primaryHover: '#7c3aed',
+        secondary: '#06b6d4',
+        text: '#e5e5e5',
+        textSecondary: '#a3a3a3',
+        success: '#22c55e',
+        warning: '#f59e0b',
+        danger: '#ef4444'
+      };
+
+      // Tracking Helper
+      const logEvent = (message, type = 'event', metadata = null) => {
+        const timestamp = new Date().toLocaleTimeString();
+        setEvents(prev => [...prev, { timestamp, message, type, metadata }]);
+      };
+
+      // Component Mount Tracking
+      useEffect(() => {
+        logEvent('🚀 Plugin loaded', 'event', 'referrer: direct | location: demo');
+        logEvent('📄 .toe file: daydream_project_v1.toe', 'event');
+      }, []);
+
+      // Classification Logic
+      useEffect(() => {
+        let classification = 'Unsuccessful';
+        
+        if (sessionEngagement.sharesCompleted > 0) {
+          classification = 'Highly Successful';
+        } else if (sessionEngagement.totalStreamTime >= 300 && sessionEngagement.paramChanges > 0) {
+          classification = 'Moderately Successful';
+        } else if (sessionEngagement.totalStreamTime < 300 && sessionEngagement.streamSessions > 0) {
+          classification = 'Unsuccessful';
+        }
+        
+        if (classification !== userClassification) {
+          setUserClassification(classification);
+          logEvent(`Classification updated: ${classification}`, 'engagement');
+        }
+      }, [sessionEngagement]);
+
+      // Stream Duration Timer
+      useEffect(() => {
+        let interval;
+        if (isStreaming) {
+          interval = setInterval(() => {
+            setStreamDuration(prev => {
+              const newDuration = prev + 1;
+              setSessionEngagement(s => ({ ...s, totalStreamTime: newDuration }));
+              return newDuration;
+            });
+          }, 1000);
+        } else {
+          setStreamDuration(0);
+        }
+        return () => clearInterval(interval);
+      }, [isStreaming]);
+
+      // Recording Duration Timer
+      useEffect(() => {
+        let interval;
+        if (isRecording) {
+          interval = setInterval(() => {
+            setRecordingDuration(prev => prev + 1);
+          }, 1000);
+        }
+        return () => clearInterval(interval);
+      }, [isRecording]);
+
+      // Auth Flow
+      const handleSignIn = () => {
+        setShowAuthModal(true);
+        setAuthStep('initial');
+        logEvent('🔐 Sign in initiated', 'event');
+      };
+
+      const openBrowserAuth = () => {
+        setAuthStep('browser-opened');
+        logEvent('🌐 Browser window opened for OAuth', 'event');
+        
+        setTimeout(() => {
+          setAuthStep('authenticating');
+          logEvent('⏳ Authenticating with Daydream...', 'event');
+        }, 2000);
+        
+        setTimeout(() => {
+          setAuthStep('success');
+          logEvent('✅ Authentication successful', 'success');
+          logEvent('🔑 API key generated and stored locally', 'success');
+        }, 4000);
+      };
+
+      const completeAuth = () => {
+        setIsAuthenticated(true);
+        setShowAuthModal(false);
+        setAuthStep('initial');
+        logEvent('✓ Login completed', 'success', 'user: demo@daydream.live');
+        logEvent('🎨 Ready to stream!', 'success');
+      };
+
+      // Stream Controls
+      const toggleStream = () => {
+        if (!isStreaming) {
+          setIsStreaming(true);
+          setSessionEngagement(s => ({ ...s, streamSessions: s.streamSessions + 1 }));
+          logEvent('▶️ Stream started', 'stream', `session #${sessionEngagement.streamSessions + 1}`);
+        } else {
+          setIsStreaming(false);
+          const duration = formatTime(streamDuration);
+          logEvent(`⏹️ Stream stopped`, 'stream', `duration: ${duration}`);
+          
+          if (Math.random() > 0.8) {
+            const reasons = ['Network timeout', 'GPU resource exhausted', 'WHIP connection lost', 'User initiated'];
+            const reason = reasons[Math.floor(Math.random() * reasons.length)];
+            setDisconnectReason(reason);
+            logEvent(`⚠️ Disconnect reason: ${reason}`, 'warning');
+          }
+        }
+      };
+
+      // Recording Controls
+      const toggleRecording = () => {
+        if (!isRecording) {
+          setIsRecording(true);
+          setRecordingDuration(0);
+          logEvent('🎬 Recording started', 'stream');
+        } else {
+          setIsRecording(false);
+          const newClip = {
+            id: Date.now(),
+            duration: recordingDuration,
+            timestamp: new Date().toLocaleTimeString(),
+            thumbnail: '🎨',
+            prompt: settings.prompt.substring(0, 50)
+          };
+          setRecordedClips(prev => [...prev, newClip]);
+          setSessionEngagement(s => ({ ...s, recordingsMade: s.recordingsMade + 1 }));
+          logEvent(`✓ Recording stopped`, 'success', `duration: ${formatTime(recordingDuration)}`);
+          setRecordingDuration(0);
+        }
+      };
+
+      // Share Flow
+      const handleShare = (clip) => {
+        setSelectedClip(clip);
+        setShowShareModal(true);
+        logEvent('📤 Share initiated', 'event', `clip: ${clip.id}`);
+      };
+
+      const completeShare = (includeWorkflow) => {
+        setShowShareModal(false);
+        setSessionEngagement(s => ({ ...s, sharesCompleted: s.sharesCompleted + 1 }));
+        logEvent(`✓ Share completed`, 'success', `workflow included: ${includeWorkflow ? 'yes' : 'no'}`);
+        logEvent('🚀 Clip published to profile + discover feed', 'success');
+        logEvent('🔗 Live at: daydream.live/u/demo/clips/' + selectedClip.id, 'success');
+      };
+
+      // Parameter Changes
+      const updateSetting = (key, value) => {
+        setSettings(prev => ({ ...prev, [key]: value }));
+        setSessionEngagement(s => ({ ...s, paramChanges: s.paramChanges + 1 }));
+        logEvent(`⚙️ Parameter changed: ${key}`, 'engagement', `new value: ${value}`);
+      };
+
+      const updatePrompt = (value) => {
+        setSettings(prev => ({ ...prev, prompt: value }));
+        setSessionEngagement(s => ({ 
+          ...s, 
+          promptChanges: s.promptChanges + 1,
+          paramChanges: s.paramChanges + 1 
+        }));
+        logEvent('✍️ Prompt updated', 'engagement', `length: ${value.length} chars`);
+      };
+
+      // Tab Navigation
+      const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        logEvent(`📑 Tab navigated: ${tab}`, 'event');
+      };
+
+      // Toggle Section
+      const toggleSection = (section) => {
+        setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+      };
+
+      // Report Issue
+      const handleReportIssue = () => {
+        setShowReportModal(true);
+        logEvent('🐛 Report issue opened', 'event');
+      };
+
+      const submitReport = () => {
+        logEvent('✓ Issue reported', 'success', 'ticket created and assigned');
+        alert('✅ Thank you! Your report has been submitted.\n\nTicket #' + Math.floor(Math.random() * 10000) + '\n\nYou\'ll receive updates via email at demo@daydream.live');
+      };
+
+      // Format Time
+      const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      };
+
+      return (
+        <div style={{
+          width: '100%',
+          maxWidth: 1400,
+          margin: '0 auto',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          backgroundColor: colors.background,
+          color: colors.text,
+          minHeight: '100vh',
+          padding: 20
+        }}>
+          {/* Header */}
+          <div style={{
+            backgroundColor: colors.surface,
+            borderRadius: 12,
+            padding: 20,
+            marginBottom: 20,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            border: `1px solid ${colors.border}`
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 10,
+                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                fontSize: 24
+              }}>D</div>
+              <div>
+                <div style={{ fontSize: 22, fontWeight: 600 }}>Daydream TD</div>
+                <div style={{ fontSize: 12, color: colors.textSecondary }}>
+                  v1.0.0 • Real-time AI Generation
+                </div>
+              </div>
+            </div>
+
+            {!isAuthenticated ? (
+              <button onClick={handleSignIn} style={{
+                backgroundColor: colors.primary,
+                color: 'white',
+                border: 'none',
+                borderRadius: 8,
+                padding: '12px 24px',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8
+              }}>
+                Sign In with Daydream →
+              </button>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                <ClassificationBadge classification={userClassification} />
+                <div style={{
+                  backgroundColor: colors.surface,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: 8,
+                  padding: '8px 14px',
+                  fontSize: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8
+                }}>
+                  <div style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    backgroundColor: colors.success
+                  }} />
+                  demo@daydream.live
+                </div>
+                <button 
+                  onClick={() => {
+                    setIsAuthenticated(false);
+                    setIsStreaming(false);
+                    logEvent('👋 Logged out', 'event');
+                  }}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: `1px solid ${colors.border}`,
+                    borderRadius: 8,
+                    padding: '8px 12px',
+                    color: colors.textSecondary,
+                    cursor: 'pointer',
+                    fontSize: 12
+                  }}>
+                  <LogOut size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Main Content */}
+          {!isAuthenticated ? (
+            <div style={{
+              backgroundColor: colors.surface,
+              borderRadius: 12,
+              padding: 80,
+              textAlign: 'center',
+              border: `1px solid ${colors.border}`
+            }}>
+              <div style={{
+                width: 100,
+                height: 100,
+                margin: '0 auto 24px',
+                borderRadius: 20,
+                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 50
+              }}>🎨</div>
+              <h2 style={{ fontSize: 32, marginBottom: 16, fontWeight: 600 }}>
+                Welcome to Daydream TD
+              </h2>
+              <p style={{ 
+                color: colors.textSecondary, 
+                fontSize: 16, 
+                marginBottom: 40, 
+                maxWidth: 600, 
+                margin: '0 auto 40px',
+                lineHeight: 1.6
+              }}>
+                Stream real-time AI generation directly from TouchDesigner.<br/>
+                Sign in to get started in under 60 seconds.
+              </p>
+              
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 20,
+                maxWidth: 800,
+                margin: '0 auto 40px',
+                textAlign: 'left'
+              }}>
+                <div style={{
+                  padding: 20,
+                  backgroundColor: colors.background,
+                  borderRadius: 10,
+                  border: `1px solid ${colors.border}`
+                }}>
+                  <Zap size={24} color={colors.primary} style={{ marginBottom: 12 }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Sub-second Latency</h3>
+                  <p style={{ fontSize: 12, color: colors.textSecondary, margin: 0 }}>
+                    Real-time streaming with TensorRT acceleration
+                  </p>
+                </div>
+                <div style={{
+                  padding: 20,
+                  backgroundColor: colors.background,
+                  borderRadius: 10,
+                  border: `1px solid ${colors.border}`
+                }}>
+                  <Settings size={24} color={colors.secondary} style={{ marginBottom: 12 }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Full Control</h3>
+                  <p style={{ fontSize: 12, color: colors.textSecondary, margin: 0 }}>
+                    ControlNet, IP Adapter, and multi-model support
+                  </p>
+                </div>
+                <div style={{
+                  padding: 20,
+                  backgroundColor: colors.background,
+                  borderRadius: 10,
+                  border: `1px solid ${colors.border}`
+                }}>
+                  <Share2 size={24} color={colors.success} style={{ marginBottom: 12 }} />
+                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Share & Discover</h3>
+                  <p style={{ fontSize: 12, color: colors.textSecondary, margin: 0 }}>
+                    Publish clips and workflows to the community
+                  </p>
+                </div>
+              </div>
+
+              <button onClick={handleSignIn} style={{
+                backgroundColor: colors.primary,
+                color: 'white',
+                border: 'none',
+                borderRadius: 10,
+                padding: '16px 40px',
+                fontSize: 16,
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}>
+                Sign In with Daydream →
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Tab Navigation */}
+              <div style={{
+                display: 'flex',
+                gap: 8,
+                marginBottom: 20,
+                borderBottom: `1px solid ${colors.border}`,
+                paddingBottom: 0
+              }}>
+                {['stream', 'record', 'library', 'analytics', 'about'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => handleTabChange(tab)}
+                    style={{
+                      backgroundColor: activeTab === tab ? colors.surface : 'transparent',
+                      border: 'none',
+                      borderBottom: activeTab === tab ? `2px solid ${colors.primary}` : '2px solid transparent',
+                      color: activeTab === tab ? colors.text : colors.textSecondary,
+                      padding: '12px 20px',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      textTransform: 'capitalize'
+                    }}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* Stream Tab */}
+              {activeTab === 'stream' && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: 20 }}>
+                  {/* Preview Area */}
+                  <div style={{
+                    backgroundColor: colors.surface,
+                    borderRadius: 12,
+                    border: `1px solid ${colors.border}`,
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <div style={{
+                      aspectRatio: '16/9',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#000',
+                      position: 'relative'
+                    }}>
+                      {isStreaming ? (
+                        <>
+                          <div style={{
+                            fontSize: 120,
+                            opacity: 0.3,
+                            animation: 'pulse 2s infinite'
+                          }}>🎨</div>
+                          <div style={{
+                            position: 'absolute',
+                            top: 16,
+                            left: 16,
+                            backgroundColor: colors.danger,
+                            color: 'white',
+                            padding: '8px 16px',
+                            borderRadius: 8,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8
+                          }}>
+                            <Circle size={10} fill="white" />
+                            LIVE {formatTime(streamDuration)}
+                          </div>
+                          {isRecording && (
+                            <div style={{
+                              position: 'absolute',
+                              top: 16,
+                              right: 16,
+                              backgroundColor: colors.danger,
+                              color: 'white',
+                              padding: '8px 16px',
+                              borderRadius: 8,
+                              fontSize: 13,
+                              fontWeight: 600,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 8
+                            }}>
+                              <Video size={16} />
+                              REC {formatTime(recordingDuration)}
+                            </div>
+                          )}
+                          <div style={{
+                            position: 'absolute',
+                            bottom: 16,
+                            left: 16,
+                            right: 16,
+                            backgroundColor: 'rgba(0,0,0,0.7)',
+                            backdropFilter: 'blur(10px)',
+                            padding: 12,
+                            borderRadius: 8,
+                            fontSize: 12,
+                            color: colors.textSecondary
+                          }}>
+                            <div style={{ fontWeight: 600, marginBottom: 4, color: colors.text }}>
+                              Current Prompt
+                            </div>
+                            {settings.prompt}
+                          </div>
+                        </>
+                      ) : (
+                        <div style={{ textAlign: 'center', padding: 40 }}>
+                          <Play size={80} color={colors.textSecondary} style={{ marginBottom: 20 }} />
+                          <div style={{ color: colors.text, fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
+                            Ready to Stream
+                          </div>
+                          <div style={{ color: colors.textSecondary, fontSize: 14 }}>
+                            Click "Start Stream" to begin generating
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Stream Controls */}
+                    <div style={{
+                      padding: 20,
+                      backgroundColor: colors.surface,
+                      borderTop: `1px solid ${colors.border}`,
+                      display: 'flex',
+                      gap: 12,
+                      alignItems: 'center'
+                    }}>
+                      <button
+                        onClick={toggleStream}
+                        style={{
+                          backgroundColor: isStreaming ? colors.danger : colors.primary,
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: 8,
+                          padding: '14px 28px',
+                          fontSize: 15,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 10,
+                          flex: 1
+                        }}
+                      >
+                        {isStreaming ? (
+                          <>
+                            <Square size={18} />
+                            Stop Stream
+                          </>
+                        ) : (
+                          <>
+                            <Play size={18} />
+                            Start Stream
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={toggleRecording}
+                        disabled={!isStreaming}
+                        style={{
+                          backgroundColor: isRecording ? colors.danger : colors.surface,
+                          border: `2px solid ${isRecording ? colors.danger : colors.border}`,
+                          color: isRecording ? 'white' : colors.text,
+                          borderRadius: 8,
+                          padding: '14px 28px',
+                          fontSize: 15,
+                          fontWeight: 600,
+                          cursor: isStreaming ? 'pointer' : 'not-allowed',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 10,
+                          opacity: isStreaming ? 1 : 0.4
+                        }}
+                      >
+                        <Circle size={16} fill={isRecording ? 'white' : 'transparent'} />
+                        {isRecording ? 'Stop Rec' : 'Record'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Settings Panel */}
+                  <div style={{
+                    backgroundColor: colors.surface,
+                    borderRadius: 12,
+                    border: `1px solid ${colors.border}`,
+                    padding: 24,
+                    height: 'fit-content',
+                    maxHeight: 720,
+                    overflowY: 'auto'
+                  }}>
+                    <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
+                      Stream Settings
+                    </h3>
+
+                    {/* Model Selection */}
+                    <div style={{ marginBottom: 24 }}>
+                      <label style={{ 
+                        display: 'block', 
+                        fontSize: 13, 
+                        fontWeight: 600,
+                        color: colors.text, 
+                        marginBottom: 8 
+                      }}>
+                        Model
+                      </label>
+                      <select
+                        value={settings.model}
+                        onChange={(e) => updateSetting('model', e.target.value)}
+                        style={{
+                          width: '100%',
+                          backgroundColor: colors.background,
+                          border: `1px solid ${colors.border}`,
+                          borderRadius: 8,
+                          padding: '10px 12px',
+                          color: colors.text,
+                          fontSize: 13
+                        }}
+                      >
+                        <option value="stabilityai/sdxl-turbo">SDXL Turbo</option>
+                        <option value="stabilityai/sd-turbo">SD Turbo</option>
+                        <option value="runwayml/stable-diffusion-v1-5">SD 1.5</option>
+                        <option value="stabilityai/stable-diffusion-xl-base-1.0">SDXL Base</option>
+                      </select>
+                    </div>
+
+                    {/* Resolution */}
+                    <div style={{ marginBottom: 24 }}>
+                      <label style={{ 
+                        display: 'block', 
+                        fontSize: 13, 
+                        fontWeight: 600,
+                        color: colors.text, 
+                        marginBottom: 8 
+                      }}>
+                        Resolution (16:9)
+                      </label>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        <div>
+                          <div style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 4 }}>Width</div>
+                          <input
+                            type="number"
+                            value={settings.width}
+                            onChange={(e) => updateSetting('width', parseInt(e.target.value))}
+                            style={{
+                              width: '100%',
+                              backgroundColor: colors.background,
+                              border: `1px solid ${colors.border}`,
+                              borderRadius: 8,
+                              padding: '10px 12px',
+                              color: colors.text,
+                              fontSize: 13
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 4 }}>Height</div>
+                          <input
+                            type="number"
+                            value={settings.height}
+                            onChange={(e) => updateSetting('height', parseInt(e.target.value))}
+                            style={{
+                              width: '100%',
+                              backgroundColor: colors.background,
+                              border: `1px solid ${colors.border}`,
+                              borderRadius: 8,
+                              padding: '10px 12px',
+                              color: colors.text,
+                              fontSize: 13
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ borderTop: `1px solid ${colors.border}`, margin: '24px 0' }} />
+
+                    {/* Prompts Section */}
+                    <div style={{ marginBottom: 20 }}>
+                      <button
+                        onClick={() => toggleSection('prompts')}
+                        style={{
+                          width: '100%',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          color: colors.text,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          padding: '10px 0',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <span>Prompts</span>
+                        {expandedSections.prompts ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                      </button>
+                      
+                      {expandedSections.prompts && (
+                        <div style={{ paddingTop: 16 }}>
+                          <div style={{ marginBottom: 16 }}>
+                            <label style={{ 
+                              display: 'block', 
+                              fontSize: 12, 
+                              color: colors.textSecondary, 
+                              marginBottom: 6 
+                            }}>
+                              Prompt
+                            </label>
+                            <textarea
+                              value={settings.prompt}
+                              onChange={(e) => updatePrompt(e.target.value)}
+                              placeholder="Describe what you want to generate..."
+                              style={{
+                                width: '100%',
+                                backgroundColor: colors.background,
+                                border: `1px solid ${colors.border}`,
+                                borderRadius: 8,
+                                padding: '10px 12px',
+                                color: colors.text,
+                                fontSize: 13,
+                                minHeight: 80,
+                                resize: 'vertical',
+                                fontFamily: 'inherit'
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ 
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              fontSize: 12, 
+                              color: colors.textSecondary, 
+                              marginBottom: 6 
+                            }}>
+                              <span>Prompt Weight</span>
+                              <span style={{ color: colors.text, fontWeight: 600 }}>
+                                {settings.promptWeight.toFixed(1)}
+                              </span>
+                            </label>
+                            <input
+                              type="range"
+                              min="0"
+                              max="2"
+                              step="0.1"
+                              value={settings.promptWeight}
+                              onChange={(e) => updateSetting('promptWeight', parseFloat(e.target.value))}
+                              style={{ width: '100%' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Seed Section */}
+                    <div style={{ marginBottom: 20 }}>
+                      <button
+                        onClick={() => toggleSection('seed')}
+                        style={{
+                          width: '100%',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          color: colors.text,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          padding: '10px 0',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <span>Seed</span>
+                        {expandedSections.seed ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                      </button>
+                      
+                      {expandedSections.seed && (
+                        <div style={{ paddingTop: 16 }}>
+                          <div style={{ marginBottom: 16 }}>
+                            <label style={{ 
+                              display: 'block', 
+                              fontSize: 12, 
+                              color: colors.textSecondary, 
+                              marginBottom: 6 
+                            }}>
+                              Seed Value
+                            </label>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                              <input
+                                type="number"
+                                value={settings.seed}
+                                onChange={(e) => updateSetting('seed', parseInt(e.target.value))}
+                                style={{
+                                  flex: 1,
+                                  backgroundColor: colors.background,
+                                  border: `1px solid ${colors.border}`,
+                                  borderRadius: 8,
+                                  padding: '10px 12px',
+                                  color: colors.text,
+                                  fontSize: 13
+                                }}
+                              />
+                              <button
+                                onClick={() => updateSetting('seed', Math.floor(Math.random() * 1000000))}
+                                style={{
+                                  backgroundColor: colors.surface,
+                                  border: `1px solid ${colors.border}`,
+                                  borderRadius: 8,
+                                  padding: '10px 14px',
+                                  color: colors.text,
+                                  cursor: 'pointer',
+                                  fontSize: 12
+                                }}
+                              >
+                                Random
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Advanced Section */}
+                    <div style={{ marginBottom: 20 }}>
+                      <button
+                        onClick={() => toggleSection('advanced')}
+                        style={{
+                          width: '100%',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          color: colors.text,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          padding: '10px 0',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <span>Advanced</span>
+                        {expandedSections.advanced ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                      </button>
+                      
+                      {expandedSections.advanced && (
+                        <div style={{ paddingTop: 16 }}>
+                          <div style={{ marginBottom: 16 }}>
+                            <label style={{ 
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              fontSize: 12, 
+                              color: colors.textSecondary, 
+                              marginBottom: 6 
+                            }}>
+                              <span>Steps</span>
+                              <span style={{ color: colors.text, fontWeight: 600 }}>{settings.steps}</span>
+                            </label>
+                            <input
+                              type="range"
+                              min="1"
+                              max="50"
+                              value={settings.steps}
+                              onChange={(e) => updateSetting('steps', parseInt(e.target.value))}
+                              style={{ width: '100%' }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ 
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              fontSize: 12, 
+                              color: colors.textSecondary, 
+                              marginBottom: 6 
+                            }}>
+                              <span>Guidance Scale</span>
+                              <span style={{ color: colors.text, fontWeight: 600 }}>{settings.guidanceScale.toFixed(1)}</span>
+                            </label>
+                            <input
+                              type="range"
+                              min="1"
+                              max="20"
+                              step="0.5"
+                              value={settings.guidanceScale}
+                              onChange={(e) => updateSetting('guidanceScale', parseFloat(e.target.value))}
+                              style={{ width: '100%' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Record Tab */}
+              {activeTab === 'record' && (
+                <div style={{
+                  backgroundColor: colors.surface,
+                  borderRadius: 12,
+                  border: `1px solid ${colors.border}`,
+                  padding: 40,
+                  textAlign: 'center'
+                }}>
+                  <Video size={64} color={colors.textSecondary} style={{ marginBottom: 20 }} />
+                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Recording</h3>
+                  <p style={{ color: colors.textSecondary, marginBottom: 24 }}>
+                    Start streaming to enable recording. Your clips will appear here.
+                  </p>
+                  {recordedClips.length > 0 && (
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
+                      gap: 16,
+                      textAlign: 'left',
+                      marginTop: 24
+                    }}>
+                      {recordedClips.map(clip => (
+                        <div key={clip.id} style={{
+                          backgroundColor: colors.background,
+                          borderRadius: 10,
+                          padding: 16,
+                          border: `1px solid ${colors.border}`
+                        }}>
+                          <div style={{ fontSize: 32, marginBottom: 12 }}>{clip.thumbnail}</div>
+                          <div style={{ fontSize: 12, color: colors.textSecondary, marginBottom: 4 }}>
+                            {clip.timestamp}
+                          </div>
+                          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>
+                            {formatTime(clip.duration)}
+                          </div>
+                          <button
+                            onClick={() => handleShare(clip)}
+                            style={{
+                              backgroundColor: colors.primary,
+                              color: 'white',
+                              border: 'none',
+                              borderRadius: 6,
+                              padding: '8px 16px',
+                              fontSize: 12,
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              width: '100%'
+                            }}
+                          >
+                            Share
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Library Tab */}
+              {activeTab === 'library' && (
+                <div style={{
+                  backgroundColor: colors.surface,
+                  borderRadius: 12,
+                  border: `1px solid ${colors.border}`,
+                  padding: 40,
+                  textAlign: 'center'
+                }}>
+                  <Upload size={64} color={colors.textSecondary} style={{ marginBottom: 20 }} />
+                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Your Library</h3>
+                  <p style={{ color: colors.textSecondary }}>
+                    Published clips and workflows will appear here.
+                  </p>
+                </div>
+              )}
+
+              {/* Analytics Tab */}
+              {activeTab === 'analytics' && (
+                <div style={{
+                  backgroundColor: colors.surface,
+                  borderRadius: 12,
+                  border: `1px solid ${colors.border}`,
+                  padding: 40
+                }}>
+                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Session Analytics</h3>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(3, 1fr)', 
+                    gap: 20 
+                  }}>
+                    <div style={{
+                      backgroundColor: colors.background,
+                      borderRadius: 10,
+                      padding: 20,
+                      border: `1px solid ${colors.border}`
+                    }}>
+                      <Clock size={24} color={colors.primary} style={{ marginBottom: 12 }} />
+                      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>
+                        {formatTime(sessionEngagement.totalStreamTime)}
+                      </div>
+                      <div style={{ fontSize: 12, color: colors.textSecondary }}>Total Stream Time</div>
+                    </div>
+                    <div style={{
+                      backgroundColor: colors.background,
+                      borderRadius: 10,
+                      padding: 20,
+                      border: `1px solid ${colors.border}`
+                    }}>
+                      <TrendingUp size={24} color={colors.secondary} style={{ marginBottom: 12 }} />
+                      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>
+                        {sessionEngagement.streamSessions}
+                      </div>
+                      <div style={{ fontSize: 12, color: colors.textSecondary }}>Stream Sessions</div>
+                    </div>
+                    <div style={{
+                      backgroundColor: colors.background,
+                      borderRadius: 10,
+                      padding: 20,
+                      border: `1px solid ${colors.border}`
+                    }}>
+                      <Share2 size={24} color={colors.success} style={{ marginBottom: 12 }} />
+                      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>
+                        {sessionEngagement.sharesCompleted}
+                      </div>
+                      <div style={{ fontSize: 12, color: colors.textSecondary }}>Shares Completed</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* About Tab */}
+              {activeTab === 'about' && (
+                <div style={{
+                  backgroundColor: colors.surface,
+                  borderRadius: 12,
+                  border: `1px solid ${colors.border}`,
+                  padding: 40
+                }}>
+                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>About Daydream TD</h3>
+                  <p style={{ color: colors.textSecondary, marginBottom: 24, lineHeight: 1.6 }}>
+                    Daydream TD is a TouchDesigner plugin for real-time AI image generation streaming. 
+                    Connect your creative workflows to the cloud and share with the community.
+                  </p>
+                  <div style={{ display: 'flex', gap: 12 }}>
+                    <button
+                      onClick={handleReportIssue}
+                      style={{
+                        backgroundColor: colors.background,
+                        border: `1px solid ${colors.border}`,
+                        color: colors.text,
+                        borderRadius: 8,
+                        padding: '12px 20px',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8
+                      }}
+                    >
+                      <AlertCircle size={16} />
+                      Report Issue
+                    </button>
+                    <button
+                      style={{
+                        backgroundColor: colors.background,
+                        border: `1px solid ${colors.border}`,
+                        color: colors.text,
+                        borderRadius: 8,
+                        padding: '12px 20px',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8
+                      }}
+                    >
+                      <ExternalLink size={16} />
+                      Documentation
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Auth Modal */}
+          {showAuthModal && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(4px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000
+            }}>
+              <div style={{
+                backgroundColor: colors.surface,
+                borderRadius: 16,
+                border: `1px solid ${colors.border}`,
+                padding: 40,
+                maxWidth: 480,
+                width: '100%',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
+              }}>
+                {authStep === 'initial' && (
+                  <>
+                    <div style={{
+                      width: 80,
+                      height: 80,
+                      margin: '0 auto 24px',
+                      borderRadius: 16,
+                      background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 40
+                    }}>🔐</div>
+                    <h2 style={{ fontSize: 24, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
+                      Sign in to Daydream
+                    </h2>
+                    <p style={{ color: colors.textSecondary, textAlign: 'center', marginBottom: 32 }}>
+                      You'll be redirected to your browser to complete authentication.
+                    </p>
+                    <button
+                      onClick={openBrowserAuth}
+                      style={{
+                        width: '100%',
+                        backgroundColor: colors.primary,
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 10,
+                        padding: '16px 24px',
+                        fontSize: 16,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        marginBottom: 12
+                      }}
+                    >
+                      Open Browser to Sign In
+                    </button>
+                    <button
+                      onClick={() => setShowAuthModal(false)}
+                      style={{
+                        width: '100%',
+                        backgroundColor: 'transparent',
+                        border: `1px solid ${colors.border}`,
+                        color: colors.text,
+                        borderRadius: 10,
+                        padding: '14px 24px',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
+
+                {authStep === 'browser-opened' && (
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{
+                      width: 60,
+                      height: 60,
+                      margin: '0 auto 24px',
+                      border: `3px solid ${colors.border}`,
+                      borderTopColor: colors.primary,
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }} />
+                    <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
+                      Complete Sign In
+                    </h2>
+                    <p style={{ color: colors.textSecondary }}>
+                      Please complete the sign in process in your browser...
+                    </p>
+                  </div>
+                )}
+
+                {authStep === 'authenticating' && (
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{
+                      width: 60,
+                      height: 60,
+                      margin: '0 auto 24px',
+                      border: `3px solid ${colors.border}`,
+                      borderTopColor: colors.secondary,
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }} />
+                    <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
+                      Authenticating...
+                    </h2>
+                    <p style={{ color: colors.textSecondary }}>
+                      Verifying your credentials with Daydream servers
+                    </p>
+                  </div>
+                )}
+
+                {authStep === 'success' && (
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{
+                      width: 80,
+                      height: 80,
+                      margin: '0 auto 24px',
+                      borderRadius: '50%',
+                      backgroundColor: `${colors.success}20`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <CheckCircle size={48} color={colors.success} />
+                    </div>
+                    <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
+                      Authentication Successful!
+                    </h2>
+                    <p style={{ color: colors.textSecondary, marginBottom: 32 }}>
+                      Your API key has been generated and stored locally.
+                    </p>
+                    <button
+                      onClick={completeAuth}
+                      style={{
+                        width: '100%',
+                        backgroundColor: colors.success,
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 10,
+                        padding: '16px 24px',
+                        fontSize: 16,
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Get Started
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Share Modal */}
+          {showShareModal && selectedClip && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(4px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000
+            }}>
+              <div style={{
+                backgroundColor: colors.surface,
+                borderRadius: 16,
+                border: `1px solid ${colors.border}`,
+                padding: 40,
+                maxWidth: 540,
+                width: '100%',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
+              }}>
+                <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>
+                  Share to Community
+                </h2>
+                <p style={{ color: colors.textSecondary, fontSize: 14, marginBottom: 24 }}>
+                  Your clip will be published to your profile and the discover feed.
+                </p>
+                
+                <div style={{
+                  backgroundColor: colors.background,
+                  borderRadius: 12,
+                  padding: 16,
+                  marginBottom: 24,
+                  border: `1px solid ${colors.border}`
+                }}>
+                  <div style={{ fontSize: 12, color: colors.textSecondary, marginBottom: 8 }}>
+                    Preview
+                  </div>
+                  <div style={{ 
+                    fontSize: 14, 
+                    color: colors.text,
+                    marginBottom: 4
+                  }}>
+                    {selectedClip.prompt}
+                  </div>
+                  <div style={{ fontSize: 12, color: colors.textSecondary }}>
+                    Duration: {formatTime(selectedClip.duration)}
+                  </div>
+                </div>
+
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 14,
+                  padding: 18,
+                  backgroundColor: colors.background,
+                  borderRadius: 12,
+                  marginBottom: 28,
+                  cursor: 'pointer',
+                  border: `1px solid ${colors.border}`
+                }}>
+                  <input 
+                    type="checkbox" 
+                    defaultChecked 
+                    style={{ marginTop: 2, width: 18, height: 18 }} 
+                  />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+                      Include .toe workflow file
+                    </div>
+                    <div style={{ fontSize: 12, color: colors.textSecondary }}>
+                      Let others remix and build upon your creation (recommended)
+                    </div>
+                  </div>
+                </label>
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button
+                    onClick={() => completeShare(true)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: colors.primary,
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 10,
+                      padding: '14px 24px',
+                      fontSize: 15,
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Publish to Community
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowShareModal(false);
+                      logEvent('❌ Share cancelled', 'event');
+                    }}
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: `1px solid ${colors.border}`,
+                      color: colors.text,
+                      borderRadius: 10,
+                      padding: '14px 24px',
+                      fontSize: 15,
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Report Issue Modal */}
+          {showReportModal && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.85)',
+              backdropFilter: 'blur(4px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000
+            }}>
+              <div style={{
+                backgroundColor: colors.surface,
+                borderRadius: 16,
+                border: `1px solid ${colors.border}`,
+                padding: 40,
+                maxWidth: 540,
+                width: '100%',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
+              }}>
+                <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>
+                  Report an Issue
+                </h2>
+                <p style={{ color: colors.textSecondary, fontSize: 14, marginBottom: 24 }}>
+                  Context about your session will be automatically included with your report.
+                </p>
+                
+                <div style={{
+                  backgroundColor: colors.background,
+                  borderRadius: 10,
+                  padding: 14,
+                  marginBottom: 20,
+                  fontSize: 12,
+                  color: colors.textSecondary,
+                  fontFamily: 'monospace'
+                }}>
+                  <div style={{ marginBottom: 4 }}>
+                    <strong style={{ color: colors.text }}>Auto-included context:</strong>
+                  </div>
+                  <div>• Plugin version: v1.0.0</div>
+                  <div>• Stream sessions: {sessionEngagement.streamSessions}</div>
+                  <div>• Total stream time: {formatTime(sessionEngagement.totalStreamTime)}</div>
+                  {disconnectReason && <div>• Last disconnect: {disconnectReason}</div>}
+                </div>
+                
+                <textarea
+                  placeholder="Describe what happened and what you expected..."
+                  style={{
+                    width: '100%',
+                    backgroundColor: colors.background,
+                    border: `1px solid ${colors.border}`,
+                    borderRadius: 10,
+                    padding: 14,
+                    color: colors.text,
+                    fontSize: 14,
+                    minHeight: 120,
+                    marginBottom: 24,
+                    fontFamily: 'inherit',
+                    resize: 'vertical'
+                  }}
+                />
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button
+                    onClick={() => {
+                      setShowReportModal(false);
+                      submitReport();
+                    }}
+                    style={{
+                      flex: 1,
+                      backgroundColor: colors.primary,
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 10,
+                      padding: '14px 24px',
+                      fontSize: 15,
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Submit Report
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowReportModal(false);
+                      logEvent('❌ Report cancelled', 'event');
+                    }}
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: `1px solid ${colors.border}`,
+                      color: colors.text,
+                      borderRadius: 10,
+                      padding: '14px 24px',
+                      fontSize: 15,
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Event Logger */}
+          {showEventLogger && <EventLogger events={events} />}
+
+          {/* Event Logger Toggle Button */}
+          <button
+            onClick={() => setShowEventLogger(!showEventLogger)}
+            style={{
+              position: 'fixed',
+              bottom: 20,
+              right: 20,
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              backgroundColor: colors.primary,
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 24,
+              boxShadow: '0 4px 16px rgba(139, 92, 246, 0.4)',
+              zIndex: 999
+            }}
+            title={showEventLogger ? 'Hide tracking events' : 'Show tracking events'}
+          >
+            {showEventLogger ? <EyeOff size={24} /> : <Eye size={24} />}
+          </button>
+        </div>
+      );
+    };
+
+    // Render the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<DaydreamPluginMockup />);
   </script>
 </body>
 </html>
