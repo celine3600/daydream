@@ -63,15 +63,13 @@ Download → Open in TD → Sign In Daydream→ Start Streaming→ Tweak paramet
 | Sharing | Manual | Integrated |
 | Support | GitHub issues | In-app tickets |
 
-## Documentation (About tab)
+## Documentation (Link to the About tab)
 
 - **[Knowledge Hub](https://docs.daydream.live/knowledge-hub/tutorials/stream-diffusion-td)** — Tutorials, guides, and examples
-- **[API Reference](https://daydream.studio/docs/api)** — For developers building with the Daydream API
-- **[Migration Guide](https://daydream.studio/docs/migration)** — Moving from StreamDiffusionTD
 
 ## Support
 
-### In-App Support
+### In-App Support (Link to the About tab)
 
 Use the **Report Issue** button in the About tab, it links to the bug report we are having. This automatically captures:
 - TouchDesigner version
