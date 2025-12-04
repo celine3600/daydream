@@ -1,262 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daydream TD Plugin</title>
-  <meta name="description" content="Stream real-time AI generation directly from TouchDesigner">
-  
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
-  
-  <!-- React -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  
-  <!-- Babel for JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daydream TD — Mockup</title>
+  <meta name="description" content="Daydream TD — mockup converted for GitHub Pages" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root{
+      --bg:#0a0a0a; --surface:#1a1a1a; --surface-hover:#252525; --border:#333;
+      --primary:#8b5cf6; --primary-hover:#7c3aed; --secondary:#06b6d4;
+      --text:#e5e5e5; --text-secondary:#a3a3a3; --success:#22c55e; --warning:#f59e0b; --danger:#ef4444;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "monospace";
+      font-synthesis: none;
     }
-    
-    body {
-      background-color: #0a0a0a;
-      color: #e5e5e5;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      min-height: 100vh;
-    }
-    
-    #root {
-      min-height: 100vh;
-    }
-    
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: #1a1a1a;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: #333;
-      border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: #444;
-    }
-    
-    /* Range input styling */
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
-      background: #333;
-      border-radius: 3px;
-      outline: none;
-    }
-    
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      background: #8b5cf6;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    
-    input[type="range"]::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
-      background: #8b5cf6;
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-    }
-    
-    /* Select styling */
-    select {
-      -webkit-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px;
-      padding-right: 40px !important;
-    }
-    
-    /* Remove focus outlines, add custom */
-    input:focus, select:focus, textarea:focus, button:focus {
-      outline: none;
-      border-color: #8b5cf6 !important;
-    }
-    
-    /* Animation keyframes */
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.05); }
-    }
-    
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;}
+    .container{max-width:1400px;margin:0 auto;padding:20px;min-height:100vh;}
+    .card{background:var(--surface);border-radius:12px;padding:20px;border:1px solid var(--border);}
+    .header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brandlogo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px}
+    .muted{color:var(--text-secondary)}
+    button.btn{border:none;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer;}
+    .primary{background:var(--primary);color:white}
+    .primary:hover{background:var(--primary-hover)}
+    .surface{background:var(--surface);border-radius:12px;border:1px solid var(--border)}
+    .two-col{display:grid;grid-template-columns:1fr 420px;gap:20px}
+    .tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:20px}
+    .tab-btn{background:transparent;border:none;padding:12px 20px;font-weight:600;cursor:pointer;color:var(--text-secondary);text-transform:capitalize}
+    .tab-btn.active{background:var(--surface);color:var(--text);border-bottom:2px solid var(--primary)}
+    .preview{aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .controls{display:flex;gap:12px;padding:20px;border-top:1px solid var(--border);background:var(--surface)}
+    .controls button{flex:1;padding:14px 24px;font-size:15px;border-radius:8px;display:flex;align-items:center;gap:8px;justify-content:center}
+    .controls .danger{background:var(--danger);color:white}
+    .settings-panel{padding:24px;max-height:720px;overflow:auto}
+    .label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text)}
+    input[type=number], select, textarea, input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .stat{background:var(--bg);padding:24px;border-radius:12px;border:1px solid var(--border)}
+    .small{font-size:12px;color:var(--text-secondary)}
+    .prompt-area textarea{min-height:80px;resize:vertical}
+    .accordion-btn{width:100%;background:transparent;border:none;display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-weight:600;cursor:pointer;color:var(--text)}
+    .section{padding-top:12px}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600}
+    /* modals */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal{background:var(--surface);border-radius:16px;border:1px solid var(--border);max-width:640px;width:100%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;cursor:pointer}
+    /* event logger */
+    .event-logger{position:fixed;right:20px;bottom:80px;width:380px;max-height:500px;background:#111;border-radius:12px;padding:16px;overflow:auto;font-family:var(--mono);font-size:11px;z-index:1000;border:1px solid #333;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    .event-toggle{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:var(--primary);border:none;color:white;display:flex;align-items:center;justify-content:center;z-index:1001;box-shadow:0 4px 16px rgba(139,92,246,.4);cursor:pointer}
+    .event-item{background:#080808;border-radius:6px;padding:8px;margin-bottom:6px;border-left:3px solid #fbbf24;font-size:10px}
+    .event-time{color:#666;font-size:10px;margin-bottom:4px}
+    .record-card{background:var(--bg);border-radius:12px;border:1px solid var(--border);overflow:hidden}
+    .record-preview{aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;font-size:60px;position:relative}
+    .tag{padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.06);font-size:11px}
+    .muted-block{background:var(--bg);padding:12px;border-radius:10px;border:1px solid var(--border);color:var(--text-secondary);font-family:var(--mono);font-size:12px}
+    /* small utility */
+    .flex{display:flex;align-items:center;gap:8px}
+    .center{text-align:center}
+    .mb{margin-bottom:12px}
+    .mt{margin-top:12px}
+    @keyframes pulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .live-pill{position:absolute;top:16px;left:16px;background:var(--danger);color:white;padding:8px 12px;border-radius:8px;font-weight:600;display:flex;align-items:center;gap:8px}
+    .rec-pill{position:absolute;top:16px;right:16px;background:var(--danger);color:white;padding:8px 12px;border-radius:8px;font-weight:600;display:flex;align-items:center;gap:8px}
+    .prompt-footer{position:absolute;bottom:16px;left:16px;right:16px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);padding:12px;border-radius:8px;color:var(--text-secondary)}
+    /* responsive */
+    @media(max-width:980px){ .two-col{grid-template-columns:1fr} .tabs{overflow:auto} .settings-panel{max-height:400px} }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <script type="text/babel" data-type="module">
-    const { useState, useEffect } = React;
-    const { 
-      Play, Square, Circle, Upload, Share2, AlertCircle, HelpCircle, 
-      LogOut, ChevronDown, ChevronRight, Plus, Minus, Video, ExternalLink, 
-      CheckCircle, X, Clock, Zap, Users, TrendingUp, Settings, Eye, EyeOff 
-    } = lucideReact;
-
-    // Tracking Event Logger Component
-    const EventLogger = ({ events }) => {
-      return (
-        <div style={{
-          position: 'fixed',
-          bottom: 80,
-          right: 20,
-          width: 380,
-          maxHeight: 500,
-          backgroundColor: '#1a1a1a',
-          border: '1px solid #333',
-          borderRadius: 12,
-          padding: 16,
-          overflowY: 'auto',
-          fontFamily: 'monospace',
-          fontSize: 11,
-          zIndex: 1000,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
-        }}>
-          <div style={{ 
-            color: '#e5e5e5', 
-            marginBottom: 12, 
-            fontWeight: 'bold',
-            fontSize: 12,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
-          }}>
-            📊 TRACKING EVENTS
-            <span style={{ 
-              marginLeft: 'auto', 
-              fontSize: 10, 
-              color: '#666',
-              backgroundColor: '#0a0a0a',
-              padding: '2px 8px',
-              borderRadius: 4
-            }}>
-              {events.length} events
-            </span>
-          </div>
-          {events.slice().reverse().map((event, i) => (
-            <div key={i} style={{
-              color: event.type === 'success' ? '#4ade80' : 
-                     event.type === 'stream' ? '#60a5fa' : 
-                     event.type === 'warning' ? '#fb923c' :
-                     event.type === 'engagement' ? '#a78bfa' :
-                     '#fbbf24',
-              marginBottom: 6,
-              padding: 8,
-              backgroundColor: '#0a0a0a',
-              borderRadius: 6,
-              fontSize: 10,
-              borderLeft: `3px solid ${
-                event.type === 'success' ? '#4ade80' : 
-                event.type === 'stream' ? '#60a5fa' : 
-                event.type === 'warning' ? '#fb923c' :
-                event.type === 'engagement' ? '#a78bfa' :
-                '#fbbf24'
-              }`
-            }}>
-              <div style={{ marginBottom: 2 }}>
-                <span style={{ color: '#666' }}>[{event.timestamp}]</span>
-              </div>
-              <div>{event.message}</div>
-              {event.metadata && (
-                <div style={{ marginTop: 4, color: '#666', fontSize: 9 }}>
-                  {event.metadata}
-                </div>
-              )}
-            </div>
-          ))}
+  <div class="container">
+    <div class="card header" id="header">
+      <div class="brand">
+        <div class="brandlogo">D</div>
+        <div>
+          <div style="font-size:22px;font-weight:600">Daydream TD</div>
+          <div class="muted" style="font-size:12px">v1.0.0 • Real-time AI Generation</div>
         </div>
-      );
-    };
+      </div>
+      <div id="header-actions"></div>
+    </div>
 
-    // Classification Badge Component
-    const ClassificationBadge = ({ classification }) => {
-      const config = {
-        'Highly Successful': { color: '#22c55e', emoji: '🎯', bg: '#15803d20' },
-        'Moderately Successful': { color: '#3b82f6', emoji: '📊', bg: '#1e40af20' },
-        'Unsuccessful': { color: '#ef4444', emoji: '📉', bg: '#991b1b20' }
-      };
-      
-      const { color, emoji, bg } = config[classification] || config['Unsuccessful'];
-      
-      return (
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-          padding: '6px 12px',
-          borderRadius: 8,
-          backgroundColor: bg,
-          border: `1px solid ${color}40`,
-          fontSize: 11,
-          fontWeight: 600,
-          color
-        }}>
-          {emoji} {classification}
-        </div>
-      );
-    };
+    <div id="mainArea" class="mt"></div>
+  </div>
 
-    const DaydreamPluginMockup = () => {
-      // State Management
-      const [isAuthenticated, setIsAuthenticated] = useState(false);
-      const [authStep, setAuthStep] = useState('initial');
-      const [isStreaming, setIsStreaming] = useState(false);
-      const [isRecording, setIsRecording] = useState(false);
-      const [activeTab, setActiveTab] = useState('stream');
-      const [showAuthModal, setShowAuthModal] = useState(false);
-      const [showReportModal, setShowReportModal] = useState(false);
-      const [showShareModal, setShowShareModal] = useState(false);
-      const [showEventLogger, setShowEventLogger] = useState(false);
-      const [streamDuration, setStreamDuration] = useState(0);
-      const [recordingDuration, setRecordingDuration] = useState(0);
-      const [events, setEvents] = useState([]);
-      const [recordedClips, setRecordedClips] = useState([]);
-      const [selectedClip, setSelectedClip] = useState(null);
-      const [sessionEngagement, setSessionEngagement] = useState({
-        paramChanges: 0,
-        promptChanges: 0,
-        totalStreamTime: 0,
-        streamSessions: 0,
-        recordingsMade: 0,
-        sharesCompleted: 0
-      });
-      const [disconnectReason, setDisconnectReason] = useState(null);
-      const [userClassification, setUserClassification] = useState('Unsuccessful');
+  <!-- Event Logger Toggle -->
+  <button id="eventToggle" class="event-toggle" title="Show tracking events">👁️</button>
 
-      // Plugin Settings State
-      const [settings, setSettings] = useState({
+  <script>
+  (function(){
+    // ===== State =====
+    const state = {
+      isAuthenticated: false,
+      authStep: 'initial', // initial, browser-opened, authenticating, success
+      isStreaming: false,
+      isRecording: false,
+      activeTab: 'stream',
+      showAuthModal: false,
+      showReportModal: false,
+      showShareModal: false,
+      showEventLogger: false,
+      streamDuration: 0,
+      recordingDuration: 0,
+      events: [],
+      recordedClips: [],
+      selectedClip: null,
+      sessionEngagement: { paramChanges:0, promptChanges:0, totalStreamTime:0, streamSessions:0, recordingsMade:0, sharesCompleted:0 },
+      disconnectReason: null,
+      userClassification: 'Unsuccessful',
+      settings: {
         model: 'stabilityai/sdxl-turbo',
         width: 1024,
         height: 576,
@@ -271,1531 +124,501 @@
         ipAdapterImage: '',
         controlNetActive: false,
         controlNetModels: []
-      });
-
-      const [expandedSections, setExpandedSections] = useState({
-        prompts: true,
-        seed: false,
-        advanced: false,
-        controlNet: false,
-        ipAdapter: false
-      });
-
-      // Brand Colors
-      const colors = {
-        background: '#0a0a0a',
-        surface: '#1a1a1a',
-        surfaceHover: '#252525',
-        border: '#333',
-        primary: '#8b5cf6',
-        primaryHover: '#7c3aed',
-        secondary: '#06b6d4',
-        text: '#e5e5e5',
-        textSecondary: '#a3a3a3',
-        success: '#22c55e',
-        warning: '#f59e0b',
-        danger: '#ef4444'
-      };
-
-      // Tracking Helper
-      const logEvent = (message, type = 'event', metadata = null) => {
-        const timestamp = new Date().toLocaleTimeString();
-        setEvents(prev => [...prev, { timestamp, message, type, metadata }]);
-      };
-
-      // Component Mount Tracking
-      useEffect(() => {
-        logEvent('🚀 Plugin loaded', 'event', 'referrer: direct | location: demo');
-        logEvent('📄 .toe file: daydream_project_v1.toe', 'event');
-      }, []);
-
-      // Classification Logic
-      useEffect(() => {
-        let classification = 'Unsuccessful';
-        
-        if (sessionEngagement.sharesCompleted > 0) {
-          classification = 'Highly Successful';
-        } else if (sessionEngagement.totalStreamTime >= 300 && sessionEngagement.paramChanges > 0) {
-          classification = 'Moderately Successful';
-        } else if (sessionEngagement.totalStreamTime < 300 && sessionEngagement.streamSessions > 0) {
-          classification = 'Unsuccessful';
-        }
-        
-        if (classification !== userClassification) {
-          setUserClassification(classification);
-          logEvent(`Classification updated: ${classification}`, 'engagement');
-        }
-      }, [sessionEngagement]);
-
-      // Stream Duration Timer
-      useEffect(() => {
-        let interval;
-        if (isStreaming) {
-          interval = setInterval(() => {
-            setStreamDuration(prev => {
-              const newDuration = prev + 1;
-              setSessionEngagement(s => ({ ...s, totalStreamTime: newDuration }));
-              return newDuration;
-            });
-          }, 1000);
-        } else {
-          setStreamDuration(0);
-        }
-        return () => clearInterval(interval);
-      }, [isStreaming]);
-
-      // Recording Duration Timer
-      useEffect(() => {
-        let interval;
-        if (isRecording) {
-          interval = setInterval(() => {
-            setRecordingDuration(prev => prev + 1);
-          }, 1000);
-        }
-        return () => clearInterval(interval);
-      }, [isRecording]);
-
-      // Auth Flow
-      const handleSignIn = () => {
-        setShowAuthModal(true);
-        setAuthStep('initial');
-        logEvent('🔐 Sign in initiated', 'event');
-      };
-
-      const openBrowserAuth = () => {
-        setAuthStep('browser-opened');
-        logEvent('🌐 Browser window opened for OAuth', 'event');
-        
-        setTimeout(() => {
-          setAuthStep('authenticating');
-          logEvent('⏳ Authenticating with Daydream...', 'event');
-        }, 2000);
-        
-        setTimeout(() => {
-          setAuthStep('success');
-          logEvent('✅ Authentication successful', 'success');
-          logEvent('🔑 API key generated and stored locally', 'success');
-        }, 4000);
-      };
-
-      const completeAuth = () => {
-        setIsAuthenticated(true);
-        setShowAuthModal(false);
-        setAuthStep('initial');
-        logEvent('✓ Login completed', 'success', 'user: demo@daydream.live');
-        logEvent('🎨 Ready to stream!', 'success');
-      };
-
-      // Stream Controls
-      const toggleStream = () => {
-        if (!isStreaming) {
-          setIsStreaming(true);
-          setSessionEngagement(s => ({ ...s, streamSessions: s.streamSessions + 1 }));
-          logEvent('▶️ Stream started', 'stream', `session #${sessionEngagement.streamSessions + 1}`);
-        } else {
-          setIsStreaming(false);
-          const duration = formatTime(streamDuration);
-          logEvent(`⏹️ Stream stopped`, 'stream', `duration: ${duration}`);
-          
-          if (Math.random() > 0.8) {
-            const reasons = ['Network timeout', 'GPU resource exhausted', 'WHIP connection lost', 'User initiated'];
-            const reason = reasons[Math.floor(Math.random() * reasons.length)];
-            setDisconnectReason(reason);
-            logEvent(`⚠️ Disconnect reason: ${reason}`, 'warning');
-          }
-        }
-      };
-
-      // Recording Controls
-      const toggleRecording = () => {
-        if (!isRecording) {
-          setIsRecording(true);
-          setRecordingDuration(0);
-          logEvent('🎬 Recording started', 'stream');
-        } else {
-          setIsRecording(false);
-          const newClip = {
-            id: Date.now(),
-            duration: recordingDuration,
-            timestamp: new Date().toLocaleTimeString(),
-            thumbnail: '🎨',
-            prompt: settings.prompt.substring(0, 50)
-          };
-          setRecordedClips(prev => [...prev, newClip]);
-          setSessionEngagement(s => ({ ...s, recordingsMade: s.recordingsMade + 1 }));
-          logEvent(`✓ Recording stopped`, 'success', `duration: ${formatTime(recordingDuration)}`);
-          setRecordingDuration(0);
-        }
-      };
-
-      // Share Flow
-      const handleShare = (clip) => {
-        setSelectedClip(clip);
-        setShowShareModal(true);
-        logEvent('📤 Share initiated', 'event', `clip: ${clip.id}`);
-      };
-
-      const completeShare = (includeWorkflow) => {
-        setShowShareModal(false);
-        setSessionEngagement(s => ({ ...s, sharesCompleted: s.sharesCompleted + 1 }));
-        logEvent(`✓ Share completed`, 'success', `workflow included: ${includeWorkflow ? 'yes' : 'no'}`);
-        logEvent('🚀 Clip published to profile + discover feed', 'success');
-        logEvent('🔗 Live at: daydream.live/u/demo/clips/' + selectedClip.id, 'success');
-      };
-
-      // Parameter Changes
-      const updateSetting = (key, value) => {
-        setSettings(prev => ({ ...prev, [key]: value }));
-        setSessionEngagement(s => ({ ...s, paramChanges: s.paramChanges + 1 }));
-        logEvent(`⚙️ Parameter changed: ${key}`, 'engagement', `new value: ${value}`);
-      };
-
-      const updatePrompt = (value) => {
-        setSettings(prev => ({ ...prev, prompt: value }));
-        setSessionEngagement(s => ({ 
-          ...s, 
-          promptChanges: s.promptChanges + 1,
-          paramChanges: s.paramChanges + 1 
-        }));
-        logEvent('✍️ Prompt updated', 'engagement', `length: ${value.length} chars`);
-      };
-
-      // Tab Navigation
-      const handleTabChange = (tab) => {
-        setActiveTab(tab);
-        logEvent(`📑 Tab navigated: ${tab}`, 'event');
-      };
-
-      // Toggle Section
-      const toggleSection = (section) => {
-        setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
-      };
-
-      // Report Issue
-      const handleReportIssue = () => {
-        setShowReportModal(true);
-        logEvent('🐛 Report issue opened', 'event');
-      };
-
-      const submitReport = () => {
-        logEvent('✓ Issue reported', 'success', 'ticket created and assigned');
-        alert('✅ Thank you! Your report has been submitted.\n\nTicket #' + Math.floor(Math.random() * 10000) + '\n\nYou\'ll receive updates via email at demo@daydream.live');
-      };
-
-      // Format Time
-      const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-      };
-
-      return (
-        <div style={{
-          width: '100%',
-          maxWidth: 1400,
-          margin: '0 auto',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          backgroundColor: colors.background,
-          color: colors.text,
-          minHeight: '100vh',
-          padding: 20
-        }}>
-          {/* Header */}
-          <div style={{
-            backgroundColor: colors.surface,
-            borderRadius: 12,
-            padding: 20,
-            marginBottom: 20,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            border: `1px solid ${colors.border}`
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: 10,
-                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                fontSize: 24
-              }}>D</div>
-              <div>
-                <div style={{ fontSize: 22, fontWeight: 600 }}>Daydream TD</div>
-                <div style={{ fontSize: 12, color: colors.textSecondary }}>
-                  v1.0.0 • Real-time AI Generation
-                </div>
-              </div>
-            </div>
-
-            {!isAuthenticated ? (
-              <button onClick={handleSignIn} style={{
-                backgroundColor: colors.primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: 8,
-                padding: '12px 24px',
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8
-              }}>
-                Sign In with Daydream →
-              </button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <ClassificationBadge classification={userClassification} />
-                <div style={{
-                  backgroundColor: colors.surface,
-                  border: `1px solid ${colors.border}`,
-                  borderRadius: 8,
-                  padding: '8px 14px',
-                  fontSize: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8
-                }}>
-                  <div style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    backgroundColor: colors.success
-                  }} />
-                  demo@daydream.live
-                </div>
-                <button 
-                  onClick={() => {
-                    setIsAuthenticated(false);
-                    setIsStreaming(false);
-                    logEvent('👋 Logged out', 'event');
-                  }}
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: `1px solid ${colors.border}`,
-                    borderRadius: 8,
-                    padding: '8px 12px',
-                    color: colors.textSecondary,
-                    cursor: 'pointer',
-                    fontSize: 12
-                  }}>
-                  <LogOut size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Main Content */}
-          {!isAuthenticated ? (
-            <div style={{
-              backgroundColor: colors.surface,
-              borderRadius: 12,
-              padding: 80,
-              textAlign: 'center',
-              border: `1px solid ${colors.border}`
-            }}>
-              <div style={{
-                width: 100,
-                height: 100,
-                margin: '0 auto 24px',
-                borderRadius: 20,
-                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 50
-              }}>🎨</div>
-              <h2 style={{ fontSize: 32, marginBottom: 16, fontWeight: 600 }}>
-                Welcome to Daydream TD
-              </h2>
-              <p style={{ 
-                color: colors.textSecondary, 
-                fontSize: 16, 
-                marginBottom: 40, 
-                maxWidth: 600, 
-                margin: '0 auto 40px',
-                lineHeight: 1.6
-              }}>
-                Stream real-time AI generation directly from TouchDesigner.<br/>
-                Sign in to get started in under 60 seconds.
-              </p>
-              
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: 20,
-                maxWidth: 800,
-                margin: '0 auto 40px',
-                textAlign: 'left'
-              }}>
-                <div style={{
-                  padding: 20,
-                  backgroundColor: colors.background,
-                  borderRadius: 10,
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <Zap size={24} color={colors.primary} style={{ marginBottom: 12 }} />
-                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Sub-second Latency</h3>
-                  <p style={{ fontSize: 12, color: colors.textSecondary, margin: 0 }}>
-                    Real-time streaming with TensorRT acceleration
-                  </p>
-                </div>
-                <div style={{
-                  padding: 20,
-                  backgroundColor: colors.background,
-                  borderRadius: 10,
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <Settings size={24} color={colors.secondary} style={{ marginBottom: 12 }} />
-                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Full Control</h3>
-                  <p style={{ fontSize: 12, color: colors.textSecondary, margin: 0 }}>
-                    ControlNet, IP Adapter, and multi-model support
-                  </p>
-                </div>
-                <div style={{
-                  padding: 20,
-                  backgroundColor: colors.background,
-                  borderRadius: 10,
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <Share2 size={24} color={colors.success} style={{ marginBottom: 12 }} />
-                  <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Share & Discover</h3>
-                  <p style={{ fontSize: 12, color: colors.textSecondary, margin: 0 }}>
-                    Publish clips and workflows to the community
-                  </p>
-                </div>
-              </div>
-
-              <button onClick={handleSignIn} style={{
-                backgroundColor: colors.primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: 10,
-                padding: '16px 40px',
-                fontSize: 16,
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}>
-                Sign In with Daydream →
-              </button>
-            </div>
-          ) : (
-            <>
-              {/* Tab Navigation */}
-              <div style={{
-                display: 'flex',
-                gap: 8,
-                marginBottom: 20,
-                borderBottom: `1px solid ${colors.border}`,
-                paddingBottom: 0
-              }}>
-                {['stream', 'record', 'library', 'analytics', 'about'].map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => handleTabChange(tab)}
-                    style={{
-                      backgroundColor: activeTab === tab ? colors.surface : 'transparent',
-                      border: 'none',
-                      borderBottom: activeTab === tab ? `2px solid ${colors.primary}` : '2px solid transparent',
-                      color: activeTab === tab ? colors.text : colors.textSecondary,
-                      padding: '12px 20px',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      textTransform: 'capitalize'
-                    }}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {/* Stream Tab */}
-              {activeTab === 'stream' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: 20 }}>
-                  {/* Preview Area */}
-                  <div style={{
-                    backgroundColor: colors.surface,
-                    borderRadius: 12,
-                    border: `1px solid ${colors.border}`,
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}>
-                    <div style={{
-                      aspectRatio: '16/9',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#000',
-                      position: 'relative'
-                    }}>
-                      {isStreaming ? (
-                        <>
-                          <div style={{
-                            fontSize: 120,
-                            opacity: 0.3,
-                            animation: 'pulse 2s infinite'
-                          }}>🎨</div>
-                          <div style={{
-                            position: 'absolute',
-                            top: 16,
-                            left: 16,
-                            backgroundColor: colors.danger,
-                            color: 'white',
-                            padding: '8px 16px',
-                            borderRadius: 8,
-                            fontSize: 13,
-                            fontWeight: 600,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8
-                          }}>
-                            <Circle size={10} fill="white" />
-                            LIVE {formatTime(streamDuration)}
-                          </div>
-                          {isRecording && (
-                            <div style={{
-                              position: 'absolute',
-                              top: 16,
-                              right: 16,
-                              backgroundColor: colors.danger,
-                              color: 'white',
-                              padding: '8px 16px',
-                              borderRadius: 8,
-                              fontSize: 13,
-                              fontWeight: 600,
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 8
-                            }}>
-                              <Video size={16} />
-                              REC {formatTime(recordingDuration)}
-                            </div>
-                          )}
-                          <div style={{
-                            position: 'absolute',
-                            bottom: 16,
-                            left: 16,
-                            right: 16,
-                            backgroundColor: 'rgba(0,0,0,0.7)',
-                            backdropFilter: 'blur(10px)',
-                            padding: 12,
-                            borderRadius: 8,
-                            fontSize: 12,
-                            color: colors.textSecondary
-                          }}>
-                            <div style={{ fontWeight: 600, marginBottom: 4, color: colors.text }}>
-                              Current Prompt
-                            </div>
-                            {settings.prompt}
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ textAlign: 'center', padding: 40 }}>
-                          <Play size={80} color={colors.textSecondary} style={{ marginBottom: 20 }} />
-                          <div style={{ color: colors.text, fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
-                            Ready to Stream
-                          </div>
-                          <div style={{ color: colors.textSecondary, fontSize: 14 }}>
-                            Click "Start Stream" to begin generating
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Stream Controls */}
-                    <div style={{
-                      padding: 20,
-                      backgroundColor: colors.surface,
-                      borderTop: `1px solid ${colors.border}`,
-                      display: 'flex',
-                      gap: 12,
-                      alignItems: 'center'
-                    }}>
-                      <button
-                        onClick={toggleStream}
-                        style={{
-                          backgroundColor: isStreaming ? colors.danger : colors.primary,
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: 8,
-                          padding: '14px 28px',
-                          fontSize: 15,
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 10,
-                          flex: 1
-                        }}
-                      >
-                        {isStreaming ? (
-                          <>
-                            <Square size={18} />
-                            Stop Stream
-                          </>
-                        ) : (
-                          <>
-                            <Play size={18} />
-                            Start Stream
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        onClick={toggleRecording}
-                        disabled={!isStreaming}
-                        style={{
-                          backgroundColor: isRecording ? colors.danger : colors.surface,
-                          border: `2px solid ${isRecording ? colors.danger : colors.border}`,
-                          color: isRecording ? 'white' : colors.text,
-                          borderRadius: 8,
-                          padding: '14px 28px',
-                          fontSize: 15,
-                          fontWeight: 600,
-                          cursor: isStreaming ? 'pointer' : 'not-allowed',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 10,
-                          opacity: isStreaming ? 1 : 0.4
-                        }}
-                      >
-                        <Circle size={16} fill={isRecording ? 'white' : 'transparent'} />
-                        {isRecording ? 'Stop Rec' : 'Record'}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Settings Panel */}
-                  <div style={{
-                    backgroundColor: colors.surface,
-                    borderRadius: 12,
-                    border: `1px solid ${colors.border}`,
-                    padding: 24,
-                    height: 'fit-content',
-                    maxHeight: 720,
-                    overflowY: 'auto'
-                  }}>
-                    <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
-                      Stream Settings
-                    </h3>
-
-                    {/* Model Selection */}
-                    <div style={{ marginBottom: 24 }}>
-                      <label style={{ 
-                        display: 'block', 
-                        fontSize: 13, 
-                        fontWeight: 600,
-                        color: colors.text, 
-                        marginBottom: 8 
-                      }}>
-                        Model
-                      </label>
-                      <select
-                        value={settings.model}
-                        onChange={(e) => updateSetting('model', e.target.value)}
-                        style={{
-                          width: '100%',
-                          backgroundColor: colors.background,
-                          border: `1px solid ${colors.border}`,
-                          borderRadius: 8,
-                          padding: '10px 12px',
-                          color: colors.text,
-                          fontSize: 13
-                        }}
-                      >
-                        <option value="stabilityai/sdxl-turbo">SDXL Turbo</option>
-                        <option value="stabilityai/sd-turbo">SD Turbo</option>
-                        <option value="runwayml/stable-diffusion-v1-5">SD 1.5</option>
-                        <option value="stabilityai/stable-diffusion-xl-base-1.0">SDXL Base</option>
-                      </select>
-                    </div>
-
-                    {/* Resolution */}
-                    <div style={{ marginBottom: 24 }}>
-                      <label style={{ 
-                        display: 'block', 
-                        fontSize: 13, 
-                        fontWeight: 600,
-                        color: colors.text, 
-                        marginBottom: 8 
-                      }}>
-                        Resolution (16:9)
-                      </label>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                        <div>
-                          <div style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 4 }}>Width</div>
-                          <input
-                            type="number"
-                            value={settings.width}
-                            onChange={(e) => updateSetting('width', parseInt(e.target.value))}
-                            style={{
-                              width: '100%',
-                              backgroundColor: colors.background,
-                              border: `1px solid ${colors.border}`,
-                              borderRadius: 8,
-                              padding: '10px 12px',
-                              color: colors.text,
-                              fontSize: 13
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <div style={{ fontSize: 11, color: colors.textSecondary, marginBottom: 4 }}>Height</div>
-                          <input
-                            type="number"
-                            value={settings.height}
-                            onChange={(e) => updateSetting('height', parseInt(e.target.value))}
-                            style={{
-                              width: '100%',
-                              backgroundColor: colors.background,
-                              border: `1px solid ${colors.border}`,
-                              borderRadius: 8,
-                              padding: '10px 12px',
-                              color: colors.text,
-                              fontSize: 13
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ borderTop: `1px solid ${colors.border}`, margin: '24px 0' }} />
-
-                    {/* Prompts Section */}
-                    <div style={{ marginBottom: 20 }}>
-                      <button
-                        onClick={() => toggleSection('prompts')}
-                        style={{
-                          width: '100%',
-                          backgroundColor: 'transparent',
-                          border: 'none',
-                          color: colors.text,
-                          fontSize: 14,
-                          fontWeight: 600,
-                          padding: '10px 0',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <span>Prompts</span>
-                        {expandedSections.prompts ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-                      </button>
-                      
-                      {expandedSections.prompts && (
-                        <div style={{ paddingTop: 16 }}>
-                          <div style={{ marginBottom: 16 }}>
-                            <label style={{ 
-                              display: 'block', 
-                              fontSize: 12, 
-                              color: colors.textSecondary, 
-                              marginBottom: 6 
-                            }}>
-                              Prompt
-                            </label>
-                            <textarea
-                              value={settings.prompt}
-                              onChange={(e) => updatePrompt(e.target.value)}
-                              placeholder="Describe what you want to generate..."
-                              style={{
-                                width: '100%',
-                                backgroundColor: colors.background,
-                                border: `1px solid ${colors.border}`,
-                                borderRadius: 8,
-                                padding: '10px 12px',
-                                color: colors.text,
-                                fontSize: 13,
-                                minHeight: 80,
-                                resize: 'vertical',
-                                fontFamily: 'inherit'
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <label style={{ 
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              fontSize: 12, 
-                              color: colors.textSecondary, 
-                              marginBottom: 6 
-                            }}>
-                              <span>Prompt Weight</span>
-                              <span style={{ color: colors.text, fontWeight: 600 }}>
-                                {settings.promptWeight.toFixed(1)}
-                              </span>
-                            </label>
-                            <input
-                              type="range"
-                              min="0"
-                              max="2"
-                              step="0.1"
-                              value={settings.promptWeight}
-                              onChange={(e) => updateSetting('promptWeight', parseFloat(e.target.value))}
-                              style={{ width: '100%' }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Seed Section */}
-                    <div style={{ marginBottom: 20 }}>
-                      <button
-                        onClick={() => toggleSection('seed')}
-                        style={{
-                          width: '100%',
-                          backgroundColor: 'transparent',
-                          border: 'none',
-                          color: colors.text,
-                          fontSize: 14,
-                          fontWeight: 600,
-                          padding: '10px 0',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <span>Seed</span>
-                        {expandedSections.seed ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-                      </button>
-                      
-                      {expandedSections.seed && (
-                        <div style={{ paddingTop: 16 }}>
-                          <div style={{ marginBottom: 16 }}>
-                            <label style={{ 
-                              display: 'block', 
-                              fontSize: 12, 
-                              color: colors.textSecondary, 
-                              marginBottom: 6 
-                            }}>
-                              Seed Value
-                            </label>
-                            <div style={{ display: 'flex', gap: 8 }}>
-                              <input
-                                type="number"
-                                value={settings.seed}
-                                onChange={(e) => updateSetting('seed', parseInt(e.target.value))}
-                                style={{
-                                  flex: 1,
-                                  backgroundColor: colors.background,
-                                  border: `1px solid ${colors.border}`,
-                                  borderRadius: 8,
-                                  padding: '10px 12px',
-                                  color: colors.text,
-                                  fontSize: 13
-                                }}
-                              />
-                              <button
-                                onClick={() => updateSetting('seed', Math.floor(Math.random() * 1000000))}
-                                style={{
-                                  backgroundColor: colors.surface,
-                                  border: `1px solid ${colors.border}`,
-                                  borderRadius: 8,
-                                  padding: '10px 14px',
-                                  color: colors.text,
-                                  cursor: 'pointer',
-                                  fontSize: 12
-                                }}
-                              >
-                                Random
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Advanced Section */}
-                    <div style={{ marginBottom: 20 }}>
-                      <button
-                        onClick={() => toggleSection('advanced')}
-                        style={{
-                          width: '100%',
-                          backgroundColor: 'transparent',
-                          border: 'none',
-                          color: colors.text,
-                          fontSize: 14,
-                          fontWeight: 600,
-                          padding: '10px 0',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        <span>Advanced</span>
-                        {expandedSections.advanced ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
-                      </button>
-                      
-                      {expandedSections.advanced && (
-                        <div style={{ paddingTop: 16 }}>
-                          <div style={{ marginBottom: 16 }}>
-                            <label style={{ 
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              fontSize: 12, 
-                              color: colors.textSecondary, 
-                              marginBottom: 6 
-                            }}>
-                              <span>Steps</span>
-                              <span style={{ color: colors.text, fontWeight: 600 }}>{settings.steps}</span>
-                            </label>
-                            <input
-                              type="range"
-                              min="1"
-                              max="50"
-                              value={settings.steps}
-                              onChange={(e) => updateSetting('steps', parseInt(e.target.value))}
-                              style={{ width: '100%' }}
-                            />
-                          </div>
-                          <div>
-                            <label style={{ 
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              fontSize: 12, 
-                              color: colors.textSecondary, 
-                              marginBottom: 6 
-                            }}>
-                              <span>Guidance Scale</span>
-                              <span style={{ color: colors.text, fontWeight: 600 }}>{settings.guidanceScale.toFixed(1)}</span>
-                            </label>
-                            <input
-                              type="range"
-                              min="1"
-                              max="20"
-                              step="0.5"
-                              value={settings.guidanceScale}
-                              onChange={(e) => updateSetting('guidanceScale', parseFloat(e.target.value))}
-                              style={{ width: '100%' }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Record Tab */}
-              {activeTab === 'record' && (
-                <div style={{
-                  backgroundColor: colors.surface,
-                  borderRadius: 12,
-                  border: `1px solid ${colors.border}`,
-                  padding: 40,
-                  textAlign: 'center'
-                }}>
-                  <Video size={64} color={colors.textSecondary} style={{ marginBottom: 20 }} />
-                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Recording</h3>
-                  <p style={{ color: colors.textSecondary, marginBottom: 24 }}>
-                    Start streaming to enable recording. Your clips will appear here.
-                  </p>
-                  {recordedClips.length > 0 && (
-                    <div style={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-                      gap: 16,
-                      textAlign: 'left',
-                      marginTop: 24
-                    }}>
-                      {recordedClips.map(clip => (
-                        <div key={clip.id} style={{
-                          backgroundColor: colors.background,
-                          borderRadius: 10,
-                          padding: 16,
-                          border: `1px solid ${colors.border}`
-                        }}>
-                          <div style={{ fontSize: 32, marginBottom: 12 }}>{clip.thumbnail}</div>
-                          <div style={{ fontSize: 12, color: colors.textSecondary, marginBottom: 4 }}>
-                            {clip.timestamp}
-                          </div>
-                          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>
-                            {formatTime(clip.duration)}
-                          </div>
-                          <button
-                            onClick={() => handleShare(clip)}
-                            style={{
-                              backgroundColor: colors.primary,
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: 6,
-                              padding: '8px 16px',
-                              fontSize: 12,
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                              width: '100%'
-                            }}
-                          >
-                            Share
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Library Tab */}
-              {activeTab === 'library' && (
-                <div style={{
-                  backgroundColor: colors.surface,
-                  borderRadius: 12,
-                  border: `1px solid ${colors.border}`,
-                  padding: 40,
-                  textAlign: 'center'
-                }}>
-                  <Upload size={64} color={colors.textSecondary} style={{ marginBottom: 20 }} />
-                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>Your Library</h3>
-                  <p style={{ color: colors.textSecondary }}>
-                    Published clips and workflows will appear here.
-                  </p>
-                </div>
-              )}
-
-              {/* Analytics Tab */}
-              {activeTab === 'analytics' && (
-                <div style={{
-                  backgroundColor: colors.surface,
-                  borderRadius: 12,
-                  border: `1px solid ${colors.border}`,
-                  padding: 40
-                }}>
-                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>Session Analytics</h3>
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(3, 1fr)', 
-                    gap: 20 
-                  }}>
-                    <div style={{
-                      backgroundColor: colors.background,
-                      borderRadius: 10,
-                      padding: 20,
-                      border: `1px solid ${colors.border}`
-                    }}>
-                      <Clock size={24} color={colors.primary} style={{ marginBottom: 12 }} />
-                      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>
-                        {formatTime(sessionEngagement.totalStreamTime)}
-                      </div>
-                      <div style={{ fontSize: 12, color: colors.textSecondary }}>Total Stream Time</div>
-                    </div>
-                    <div style={{
-                      backgroundColor: colors.background,
-                      borderRadius: 10,
-                      padding: 20,
-                      border: `1px solid ${colors.border}`
-                    }}>
-                      <TrendingUp size={24} color={colors.secondary} style={{ marginBottom: 12 }} />
-                      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>
-                        {sessionEngagement.streamSessions}
-                      </div>
-                      <div style={{ fontSize: 12, color: colors.textSecondary }}>Stream Sessions</div>
-                    </div>
-                    <div style={{
-                      backgroundColor: colors.background,
-                      borderRadius: 10,
-                      padding: 20,
-                      border: `1px solid ${colors.border}`
-                    }}>
-                      <Share2 size={24} color={colors.success} style={{ marginBottom: 12 }} />
-                      <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 4 }}>
-                        {sessionEngagement.sharesCompleted}
-                      </div>
-                      <div style={{ fontSize: 12, color: colors.textSecondary }}>Shares Completed</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* About Tab */}
-              {activeTab === 'about' && (
-                <div style={{
-                  backgroundColor: colors.surface,
-                  borderRadius: 12,
-                  border: `1px solid ${colors.border}`,
-                  padding: 40
-                }}>
-                  <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 24 }}>About Daydream TD</h3>
-                  <p style={{ color: colors.textSecondary, marginBottom: 24, lineHeight: 1.6 }}>
-                    Daydream TD is a TouchDesigner plugin for real-time AI image generation streaming. 
-                    Connect your creative workflows to the cloud and share with the community.
-                  </p>
-                  <div style={{ display: 'flex', gap: 12 }}>
-                    <button
-                      onClick={handleReportIssue}
-                      style={{
-                        backgroundColor: colors.background,
-                        border: `1px solid ${colors.border}`,
-                        color: colors.text,
-                        borderRadius: 8,
-                        padding: '12px 20px',
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8
-                      }}
-                    >
-                      <AlertCircle size={16} />
-                      Report Issue
-                    </button>
-                    <button
-                      style={{
-                        backgroundColor: colors.background,
-                        border: `1px solid ${colors.border}`,
-                        color: colors.text,
-                        borderRadius: 8,
-                        padding: '12px 20px',
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8
-                      }}
-                    >
-                      <ExternalLink size={16} />
-                      Documentation
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Auth Modal */}
-          {showAuthModal && (
-            <div style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0,0,0,0.85)',
-              backdropFilter: 'blur(4px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000
-            }}>
-              <div style={{
-                backgroundColor: colors.surface,
-                borderRadius: 16,
-                border: `1px solid ${colors.border}`,
-                padding: 40,
-                maxWidth: 480,
-                width: '100%',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
-              }}>
-                {authStep === 'initial' && (
-                  <>
-                    <div style={{
-                      width: 80,
-                      height: 80,
-                      margin: '0 auto 24px',
-                      borderRadius: 16,
-                      background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 40
-                    }}>🔐</div>
-                    <h2 style={{ fontSize: 24, fontWeight: 600, textAlign: 'center', marginBottom: 12 }}>
-                      Sign in to Daydream
-                    </h2>
-                    <p style={{ color: colors.textSecondary, textAlign: 'center', marginBottom: 32 }}>
-                      You'll be redirected to your browser to complete authentication.
-                    </p>
-                    <button
-                      onClick={openBrowserAuth}
-                      style={{
-                        width: '100%',
-                        backgroundColor: colors.primary,
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 10,
-                        padding: '16px 24px',
-                        fontSize: 16,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        marginBottom: 12
-                      }}
-                    >
-                      Open Browser to Sign In
-                    </button>
-                    <button
-                      onClick={() => setShowAuthModal(false)}
-                      style={{
-                        width: '100%',
-                        backgroundColor: 'transparent',
-                        border: `1px solid ${colors.border}`,
-                        color: colors.text,
-                        borderRadius: 10,
-                        padding: '14px 24px',
-                        fontSize: 14,
-                        fontWeight: 600,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                )}
-
-                {authStep === 'browser-opened' && (
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{
-                      width: 60,
-                      height: 60,
-                      margin: '0 auto 24px',
-                      border: `3px solid ${colors.border}`,
-                      borderTopColor: colors.primary,
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite'
-                    }} />
-                    <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
-                      Complete Sign In
-                    </h2>
-                    <p style={{ color: colors.textSecondary }}>
-                      Please complete the sign in process in your browser...
-                    </p>
-                  </div>
-                )}
-
-                {authStep === 'authenticating' && (
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{
-                      width: 60,
-                      height: 60,
-                      margin: '0 auto 24px',
-                      border: `3px solid ${colors.border}`,
-                      borderTopColor: colors.secondary,
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite'
-                    }} />
-                    <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
-                      Authenticating...
-                    </h2>
-                    <p style={{ color: colors.textSecondary }}>
-                      Verifying your credentials with Daydream servers
-                    </p>
-                  </div>
-                )}
-
-                {authStep === 'success' && (
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{
-                      width: 80,
-                      height: 80,
-                      margin: '0 auto 24px',
-                      borderRadius: '50%',
-                      backgroundColor: `${colors.success}20`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <CheckCircle size={48} color={colors.success} />
-                    </div>
-                    <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 12 }}>
-                      Authentication Successful!
-                    </h2>
-                    <p style={{ color: colors.textSecondary, marginBottom: 32 }}>
-                      Your API key has been generated and stored locally.
-                    </p>
-                    <button
-                      onClick={completeAuth}
-                      style={{
-                        width: '100%',
-                        backgroundColor: colors.success,
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 10,
-                        padding: '16px 24px',
-                        fontSize: 16,
-                        fontWeight: 600,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Get Started
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Share Modal */}
-          {showShareModal && selectedClip && (
-            <div style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0,0,0,0.85)',
-              backdropFilter: 'blur(4px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000
-            }}>
-              <div style={{
-                backgroundColor: colors.surface,
-                borderRadius: 16,
-                border: `1px solid ${colors.border}`,
-                padding: 40,
-                maxWidth: 540,
-                width: '100%',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
-              }}>
-                <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>
-                  Share to Community
-                </h2>
-                <p style={{ color: colors.textSecondary, fontSize: 14, marginBottom: 24 }}>
-                  Your clip will be published to your profile and the discover feed.
-                </p>
-                
-                <div style={{
-                  backgroundColor: colors.background,
-                  borderRadius: 12,
-                  padding: 16,
-                  marginBottom: 24,
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <div style={{ fontSize: 12, color: colors.textSecondary, marginBottom: 8 }}>
-                    Preview
-                  </div>
-                  <div style={{ 
-                    fontSize: 14, 
-                    color: colors.text,
-                    marginBottom: 4
-                  }}>
-                    {selectedClip.prompt}
-                  </div>
-                  <div style={{ fontSize: 12, color: colors.textSecondary }}>
-                    Duration: {formatTime(selectedClip.duration)}
-                  </div>
-                </div>
-
-                <label style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 14,
-                  padding: 18,
-                  backgroundColor: colors.background,
-                  borderRadius: 12,
-                  marginBottom: 28,
-                  cursor: 'pointer',
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <input 
-                    type="checkbox" 
-                    defaultChecked 
-                    style={{ marginTop: 2, width: 18, height: 18 }} 
-                  />
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
-                      Include .toe workflow file
-                    </div>
-                    <div style={{ fontSize: 12, color: colors.textSecondary }}>
-                      Let others remix and build upon your creation (recommended)
-                    </div>
-                  </div>
-                </label>
-
-                <div style={{ display: 'flex', gap: 12 }}>
-                  <button
-                    onClick={() => completeShare(true)}
-                    style={{
-                      flex: 1,
-                      backgroundColor: colors.primary,
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 10,
-                      padding: '14px 24px',
-                      fontSize: 15,
-                      fontWeight: 600,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Publish to Community
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowShareModal(false);
-                      logEvent('❌ Share cancelled', 'event');
-                    }}
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: `1px solid ${colors.border}`,
-                      color: colors.text,
-                      borderRadius: 10,
-                      padding: '14px 24px',
-                      fontSize: 15,
-                      fontWeight: 600,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Report Issue Modal */}
-          {showReportModal && (
-            <div style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0,0,0,0.85)',
-              backdropFilter: 'blur(4px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000
-            }}>
-              <div style={{
-                backgroundColor: colors.surface,
-                borderRadius: 16,
-                border: `1px solid ${colors.border}`,
-                padding: 40,
-                maxWidth: 540,
-                width: '100%',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
-              }}>
-                <h2 style={{ fontSize: 22, fontWeight: 600, marginBottom: 12 }}>
-                  Report an Issue
-                </h2>
-                <p style={{ color: colors.textSecondary, fontSize: 14, marginBottom: 24 }}>
-                  Context about your session will be automatically included with your report.
-                </p>
-                
-                <div style={{
-                  backgroundColor: colors.background,
-                  borderRadius: 10,
-                  padding: 14,
-                  marginBottom: 20,
-                  fontSize: 12,
-                  color: colors.textSecondary,
-                  fontFamily: 'monospace'
-                }}>
-                  <div style={{ marginBottom: 4 }}>
-                    <strong style={{ color: colors.text }}>Auto-included context:</strong>
-                  </div>
-                  <div>• Plugin version: v1.0.0</div>
-                  <div>• Stream sessions: {sessionEngagement.streamSessions}</div>
-                  <div>• Total stream time: {formatTime(sessionEngagement.totalStreamTime)}</div>
-                  {disconnectReason && <div>• Last disconnect: {disconnectReason}</div>}
-                </div>
-                
-                <textarea
-                  placeholder="Describe what happened and what you expected..."
-                  style={{
-                    width: '100%',
-                    backgroundColor: colors.background,
-                    border: `1px solid ${colors.border}`,
-                    borderRadius: 10,
-                    padding: 14,
-                    color: colors.text,
-                    fontSize: 14,
-                    minHeight: 120,
-                    marginBottom: 24,
-                    fontFamily: 'inherit',
-                    resize: 'vertical'
-                  }}
-                />
-
-                <div style={{ display: 'flex', gap: 12 }}>
-                  <button
-                    onClick={() => {
-                      setShowReportModal(false);
-                      submitReport();
-                    }}
-                    style={{
-                      flex: 1,
-                      backgroundColor: colors.primary,
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 10,
-                      padding: '14px 24px',
-                      fontSize: 15,
-                      fontWeight: 600,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Submit Report
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowReportModal(false);
-                      logEvent('❌ Report cancelled', 'event');
-                    }}
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: `1px solid ${colors.border}`,
-                      color: colors.text,
-                      borderRadius: 10,
-                      padding: '14px 24px',
-                      fontSize: 15,
-                      fontWeight: 600,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Event Logger */}
-          {showEventLogger && <EventLogger events={events} />}
-
-          {/* Event Logger Toggle Button */}
-          <button
-            onClick={() => setShowEventLogger(!showEventLogger)}
-            style={{
-              position: 'fixed',
-              bottom: 20,
-              right: 20,
-              width: 56,
-              height: 56,
-              borderRadius: '50%',
-              backgroundColor: colors.primary,
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 24,
-              boxShadow: '0 4px 16px rgba(139, 92, 246, 0.4)',
-              zIndex: 999
-            }}
-            title={showEventLogger ? 'Hide tracking events' : 'Show tracking events'}
-          >
-            {showEventLogger ? <EyeOff size={24} /> : <Eye size={24} />}
-          </button>
-        </div>
-      );
+      },
+      expandedSections: { prompts:true, seed:false, advanced:false, controlNet:false, ipAdapter:false }
     };
 
-    // Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<DaydreamPluginMockup />);
+    // ===== Helpers =====
+    const $ = sel => document.querySelector(sel);
+    const formatTime = (seconds) => {
+      const mins = Math.floor(seconds/60);
+      const secs = seconds % 60;
+      return `${mins}:${String(secs).padStart(2,'0')}`;
+    };
+    function logEvent(message, type='event', metadata=null){
+      const timestamp = new Date().toLocaleTimeString();
+      const ev = { timestamp, message, type, metadata };
+      state.events.push(ev);
+      renderEventLogger();
+    }
+
+    // initial load events
+    logEvent('🚀 Plugin loaded', 'event', 'referrer: direct | location: Redmond, WA');
+    logEvent('📄 .toe file: daydream_project_v1.toe', 'event');
+
+    // Classification logic watcher
+    function recomputeClassification(){
+      let classification = 'Unsuccessful';
+      const s = state.sessionEngagement;
+      if (s.sharesCompleted > 0) classification = 'Highly Successful';
+      else if (s.totalStreamTime >= 300 && s.paramChanges > 0) classification = 'Moderately Successful';
+      else if (s.totalStreamTime < 300 && s.streamSessions > 0) classification = 'Unsuccessful';
+      if (classification !== state.userClassification){
+        state.userClassification = classification;
+        logEvent('Classification updated: ' + classification, 'engagement');
+        renderHeader();
+      }
+    }
+
+    // Timers
+    let streamInterval = null;
+    let recordInterval = null;
+    function startStreamTimer(){
+      streamInterval = setInterval(()=>{
+        state.streamDuration++;
+        state.sessionEngagement.totalStreamTime = state.streamDuration;
+        renderPreview();
+        recomputeClassification();
+      },1000);
+    }
+    function stopStreamTimer(){ clearInterval(streamInterval); state.streamDuration = 0; renderPreview(); }
+
+    function startRecordTimer(){ recordInterval = setInterval(()=>{ state.recordingDuration++; renderPreview(); },1000); }
+    function stopRecordTimer(){ clearInterval(recordInterval); state.recordingDuration=0; renderPreview(); }
+
+    // ===== Render Header =====
+    function createClassificationChip(){
+      const map = {
+        'Highly Successful': { color:'#22c55e', emoji:'🎯', bg:'#15803d20' },
+        'Moderately Successful': { color:'#3b82f6', emoji:'📊', bg:'#1e40af20' },
+        'Unsuccessful': { color:'#ef4444', emoji:'📉', bg:'#991b1b20' }
+      };
+      const c = map[state.userClassification] || map['Unsuccessful'];
+      const d = document.createElement('div');
+      d.className = 'chip';
+      d.style.background = c.bg; d.style.border = `1px solid ${c.color}40`; d.style.color = c.color;
+      d.textContent = c.emoji + ' ' + state.userClassification;
+      return d;
+    }
+
+    function renderHeader(){
+      const container = document.getElementById('header-actions');
+      container.innerHTML = '';
+      if (!state.isAuthenticated){
+        const btn = document.createElement('button');
+        btn.className = 'btn primary';
+        btn.textContent = 'Sign In with Daydream →';
+        btn.onclick = ()=> { openAuthModal(); logEvent('🔐 Sign in initiated'); };
+        container.appendChild(btn);
+      } else {
+        const wrapper = document.createElement('div'); wrapper.style.display='flex'; wrapper.style.alignItems='center'; wrapper.style.gap='16px';
+        wrapper.appendChild(createClassificationChip());
+        const info = document.createElement('div'); info.style.padding='8px 14px'; info.style.border=`1px solid var(--border)`; info.style.borderRadius='8px'; info.style.fontSize='12px';
+        info.innerHTML = '<div style="display:flex;gap:8px;align-items:center"><div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div>demo@daydream.live</div>';
+        wrapper.appendChild(info);
+        const logout = document.createElement('button'); logout.className='btn btn-ghost'; logout.textContent='⎋';
+        logout.onclick = ()=>{ state.isAuthenticated=false; renderAll(); logEvent('User logged out','event'); };
+        wrapper.appendChild(logout);
+        container.appendChild(wrapper);
+      }
+    }
+
+    // ===== Main area render =====
+    function renderMain(){
+      const main = document.getElementById('mainArea');
+      main.innerHTML = '';
+      if (!state.isAuthenticated){
+        // unauthenticated landing
+        const card = document.createElement('div'); card.className='card center';
+        card.style.padding='80px';
+        card.innerHTML = `
+          <div style="width:100px;height:100px;margin:0 auto 24px;border-radius:20px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:50px">🎨</div>
+          <h2 style="font-size:32px;margin-bottom:8px">Welcome to Daydream TD</h2>
+          <p class="muted" style="max-width:600px;margin:0 auto 40px;line-height:1.6">Stream real-time AI generation directly from TouchDesigner.<br/>Sign in to get started in under 60 seconds.</p>
+        `;
+        const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='repeat(3,1fr)'; grid.style.gap='20px'; grid.style.maxWidth='800px'; grid.style.margin='0 auto 40px';
+        const features = [
+          {icon:'⚡',title:'Sub-second Latency',desc:'Real-time streaming with TensorRT acceleration'},
+          {icon:'⚙️',title:'Full Control',desc:'ControlNet, IP Adapter, and multi-model support'},
+          {icon:'🔗',title:'Share & Discover',desc:'Publish clips and workflows to the community'}
+        ];
+        features.forEach(f=>{
+          const fdiv = document.createElement('div'); fdiv.style.padding='20px'; fdiv.style.background='var(--bg)'; fdiv.style.borderRadius='10px'; fdiv.style.border=`1px solid var(--border)`;
+          fdiv.innerHTML = `<div style="font-size:20px;margin-bottom:8px">${f.icon}</div><h3 style="font-size:14px;font-weight:600;margin:0 0 8px">${f.title}</h3><p class="small" style="margin:0">${f.desc}</p>`;
+          grid.appendChild(fdiv);
+        });
+        card.appendChild(grid);
+        const signin = document.createElement('button'); signin.className='btn primary'; signin.style.padding='16px 40px'; signin.textContent='Sign In with Daydream →'; signin.onclick= ()=>{ openAuthModal(); logEvent('🔐 Sign in initiated'); };
+        card.appendChild(signin);
+        main.appendChild(card);
+        return;
+      }
+
+      // Authenticated UI
+      const wrapper = document.createElement('div');
+      // Tabs
+      const tabs = document.createElement('div'); tabs.className='tabs';
+      ['stream','record','library','analytics','about'].forEach(tab=>{
+        const b = document.createElement('button'); b.className='tab-btn'+(state.activeTab===tab?' active':''); b.textContent=tab; b.onclick=()=>{ state.activeTab=tab; logEvent('📑 Tab navigated: '+tab); renderAll(); };
+        tabs.appendChild(b);
+      });
+      wrapper.appendChild(tabs);
+
+      // Content for each tab
+      if (state.activeTab === 'stream'){
+        const grid = document.createElement('div'); grid.className='two-col';
+        // Preview Card
+        const previewCard = document.createElement('div'); previewCard.className='surface';
+        const previewArea = document.createElement('div'); previewArea.className='preview';
+        previewCard.appendChild(previewArea);
+
+        // live/idle view
+        if (state.isStreaming){
+          const big = document.createElement('div'); big.style.fontSize='120px'; big.style.opacity='.3'; big.style.animation='pulse 2s infinite'; big.textContent='🎨';
+          previewArea.appendChild(big);
+          const live = document.createElement('div'); live.className='live-pill'; live.textContent='● LIVE '+formatTime(state.streamDuration); previewArea.appendChild(live);
+          if (state.isRecording){
+            const recp = document.createElement('div'); recp.className='rec-pill'; recp.textContent='REC '+formatTime(state.recordingDuration); previewArea.appendChild(recp);
+          }
+          const promptFooter = document.createElement('div'); promptFooter.className='prompt-footer';
+          promptFooter.innerHTML = `<div style="font-weight:600;color:var(--text)">Current Prompt</div><div style="margin-top:6px">${escapeHtml(state.settings.prompt)}</div>`;
+          previewArea.appendChild(promptFooter);
+        } else {
+          const idle = document.createElement('div'); idle.style.textAlign='center'; idle.style.padding='40px';
+          idle.innerHTML = `<div style="font-size:60px;color:var(--text-secondary);margin-bottom:18px">▶️</div><div style="font-size:18px;font-weight:600">Ready to Stream</div><div class="muted" style="margin-top:8px">Click "Start Stream" to begin generating</div>`;
+          previewArea.appendChild(idle);
+        }
+
+        // Controls
+        const controls = document.createElement('div'); controls.className='controls';
+        const startBtn = document.createElement('button'); startBtn.className = state.isStreaming ? 'danger' : 'primary'; startBtn.style.border='none'; startBtn.style.color = state.isStreaming ? 'white' : 'white';
+        startBtn.innerHTML = `${state.isStreaming ? '■ Stop Stream' : '▶️ Start Stream'}`; startBtn.onclick = toggleStream;
+        const recBtn = document.createElement('button'); recBtn.textContent = state.isRecording ? '● Stop Rec' : 'Record'; recBtn.disabled = !state.isStreaming;
+        recBtn.onclick = toggleRecording;
+        recBtn.style.opacity = state.isStreaming ? 1 : 0.4;
+        recBtn.style.cursor = state.isStreaming ? 'pointer' : 'not-allowed';
+        recBtn.style.border = '2px solid ' + (state.isRecording ? 'var(--danger)' : 'var(--border)');
+        recBtn.style.background = state.isRecording ? 'var(--danger)' : 'var(--surface)';
+        recBtn.style.color = state.isRecording ? 'white' : 'var(--text)';
+        recBtn.style.padding = '14px 28px';
+        recBtn.style.borderRadius = '8px';
+        controls.appendChild(startBtn); controls.appendChild(recBtn);
+        previewCard.appendChild(controls);
+
+        // Settings panel
+        const settingsPanel = document.createElement('div'); settingsPanel.className='settings-panel';
+        settingsPanel.innerHTML = `<h3 style="font-size:18px;font-weight:600;margin-bottom:12px">Stream Settings</h3>`;
+        // model select
+        const modelWrap = document.createElement('div'); modelWrap.style.marginBottom='18px';
+        modelWrap.innerHTML = `<label class="label">Model</label><select id="modelSelect"><option>stabilityai/sdxl-turbo</option><option>runwayml/stable-diffusion-v1-5</option><option>SG161222/Realistic_Vision_V5.1</option></select>`;
+        settingsPanel.appendChild(modelWrap);
+        // resolution
+        const resWrap = document.createElement('div'); resWrap.style.marginBottom='18px';
+        resWrap.innerHTML = `<label class="label">Resolution (16:9)</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><div class="small" style="margin-bottom:4px">Width</div><input id="widthInput" type="number" value="${state.settings.width}"></div>
+            <div><div class="small" style="margin-bottom:4px">Height</div><input id="heightInput" type="number" value="${state.settings.height}"></div>
+          </div>`;
+        settingsPanel.appendChild(resWrap);
+        // separator
+        settingsPanel.appendChild(Object.assign(document.createElement('div'),{style:'border-top:1px solid var(--border);margin:24px 0'}));
+        // prompts accordion
+        const prompts = document.createElement('div'); prompts.style.marginBottom='16px';
+        prompts.innerHTML = `<button class="accordion-btn">Prompts <span>${state.expandedSections.prompts? '▾':'▸'}</span></button>`;
+        const promptsContent = document.createElement('div'); promptsContent.className='section'; if (!state.expandedSections.prompts) promptsContent.style.display='none';
+        promptsContent.innerHTML = `<div style="margin-bottom:12px"><label class="small">Prompt</label><div class="prompt-area"><textarea id="promptText">${escapeHtml(state.settings.prompt)}</textarea></div></div>
+          <div><label class="small" style="display:flex;justify-content:space-between"><span>Prompt Weight</span><span style="font-weight:600" id="pw">${state.settings.promptWeight.toFixed(1)}</span></label><input id="pwRange" type="range" min="0" max="2" step="0.1" value="${state.settings.promptWeight}"></div>`;
+        prompts.appendChild(promptsContent);
+        settingsPanel.appendChild(prompts);
+
+        // seed accordion
+        const seed = document.createElement('div'); seed.style.marginBottom='16px';
+        seed.innerHTML = `<button class="accordion-btn">Seed <span>${state.expandedSections.seed? '▾':'▸'}</span></button>`;
+        const seedContent = document.createElement('div'); seedContent.className='section'; if (!state.expandedSections.seed) seedContent.style.display='none';
+        seedContent.innerHTML = `<div style="margin-bottom:12px"><label class="small">Seed Value</label><div style="display:flex;gap:8px"><input id="seedInput" type="number" value="${state.settings.seed}"><button id="seedRandom" class="btn btn-ghost">Random</button></div></div>
+          <div><label class="small" style="display:flex;justify-content:space-between"><span>Weight</span><span style="font-weight:600" id="sw">${state.settings.seedWeight.toFixed(1)}</span></label><input id="swRange" type="range" min="0" max="2" step="0.1" value="${state.settings.seedWeight}"></div>`;
+        seed.appendChild(seedContent); settingsPanel.appendChild(seed);
+
+        // Advanced
+        const adv = document.createElement('div'); adv.style.marginBottom='16px';
+        adv.innerHTML = `<button class="accordion-btn">Advanced <span>${state.expandedSections.advanced? '▾':'▸'}</span></button>`;
+        const advContent = document.createElement('div'); advContent.className='section'; if (!state.expandedSections.advanced) advContent.style.display='none';
+        advContent.innerHTML = `<div style="margin-bottom:12px"><label class="small" style="display:flex;justify-content:space-between"><span>Steps</span><span style="font-weight:600" id="stepsVal">${state.settings.steps}</span></label><input id="stepsRange" type="range" min="1" max="4" step="1" value="${state.settings.steps}"></div>
+          <div><label class="small" style="display:flex;justify-content:space-between"><span>Guidance Scale</span><span style="font-weight:600" id="gsVal">${state.settings.guidanceScale.toFixed(1)}</span></label><input id="gsRange" type="range" min="0" max="2" step="0.1" value="${state.settings.guidanceScale}"></div>`;
+        adv.appendChild(advContent); settingsPanel.appendChild(adv);
+
+        // IP Adapter
+        const ipa = document.createElement('div'); ipa.style.marginBottom='16px';
+        ipa.innerHTML = `<button class="accordion-btn">IP Adapter <span>${state.expandedSections.ipAdapter? '▾':'▸'}</span></button>`;
+        const ipaContent = document.createElement('div'); ipaContent.className='section'; if (!state.expandedSections.ipAdapter) ipaContent.style.display='none';
+        ipaContent.innerHTML = `<label style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border)"><input id="ipaEnable" type="checkbox" ${state.settings.ipAdapterEnabled? 'checked':''}><span style="font-weight:500">Enable IP Adapter</span></label>
+          <div id="ipaInner" style="${state.settings.ipAdapterEnabled? '':'display:none'};padding-top:12px">
+            <div style="margin-bottom:12px"><label class="small">IP Image [TOP]</label><input id="ipaImage" type="text" value="${escapeHtml(state.settings.ipAdapterImage)}"></div>
+            <div><label class="small" style="display:flex;justify-content:space-between"><span>Weight</span><span style="font-weight:600" id="ipaw">${state.settings.ipAdapterWeight.toFixed(2)}</span></label><input id="ipawRange" type="range" min="0" max="1" step="0.05" value="${state.settings.ipAdapterWeight}"></div>
+          </div>`;
+        ipa.appendChild(ipaContent); settingsPanel.appendChild(ipa);
+
+        // ControlNet
+        const cn = document.createElement('div'); cn.style.marginBottom='16px';
+        cn.innerHTML = `<button class="accordion-btn">ControlNet <span>${state.expandedSections.controlNet? '▾':'▸'}</span></button>`;
+        const cnContent = document.createElement('div'); cnContent.className='section'; if (!state.expandedSections.controlNet) cnContent.style.display='none';
+        cnContent.innerHTML = `<label style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border)"><input id="cnEnable" type="checkbox" ${state.settings.controlNetActive? 'checked':''}><span style="font-weight:500">Enable ControlNet</span></label>
+          <div id="cnInner" style="${state.settings.controlNetActive? '':'display:none'};padding-top:12px"><p class="small">Configure ControlNet models (depth, canny, tile, etc.)</p><button id="addCn" class="btn btn-ghost">+ Add Model</button></div>`;
+        cn.appendChild(cnContent); settingsPanel.appendChild(cn);
+
+        grid.appendChild(previewCard);
+        grid.appendChild(settingsPanel);
+        wrapper.appendChild(grid);
+
+        // attach some event listeners inside settings
+        setTimeout(()=>{ // after DOM insertion
+          const modelSelect = document.getElementById('modelSelect');
+          modelSelect.value = state.settings.model;
+          modelSelect.onchange = (e)=>{ state.settings.model = e.target.value; state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: model','engagement',e.target.value); recomputeClassification(); };
+
+          document.getElementById('widthInput').onchange = (e)=>{ state.settings.width = parseInt(e.target.value||1024); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: width','engagement',e.target.value); recomputeClassification(); };
+          document.getElementById('heightInput').onchange = (e)=>{ state.settings.height = parseInt(e.target.value||576); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: height','engagement',e.target.value); recomputeClassification(); };
+
+          const accBtns = wrapper.querySelectorAll('.accordion-btn');
+          accBtns.forEach((b,i)=>{ b.onclick = ()=>{
+            // map to expandedSections in order: prompts, seed, advanced, ipAdapter, controlNet
+            const keys = ['prompts','seed','advanced','ipAdapter','controlNet'];
+            const key = keys[i];
+            state.expandedSections[key] = !state.expandedSections[key]; renderAll();
+          }; });
+
+          const pwRange = document.getElementById('pwRange'); const pwSpan = document.getElementById('pw');
+          pwRange.oninput = (e)=>{ state.settings.promptWeight = parseFloat(e.target.value); pwSpan.textContent = state.settings.promptWeight.toFixed(1); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: promptWeight','engagement',e.target.value); recomputeClassification(); };
+
+          document.getElementById('promptText').oninput = (e)=>{ state.settings.prompt = e.target.value; state.sessionEngagement.promptChanges++; state.sessionEngagement.paramChanges++; logEvent('✍️ Prompt updated','engagement','length:'+e.target.value.length); recomputeClassification(); };
+
+          document.getElementById('seedRandom').onclick = ()=>{ state.settings.seed = Math.floor(Math.random()*1000000); document.getElementById('seedInput').value = state.settings.seed; state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: seed','engagement',state.settings.seed); recomputeClassification(); };
+          document.getElementById('seedInput').onchange = (e)=>{ state.settings.seed = parseInt(e.target.value||0); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: seed','engagement',e.target.value); recomputeClassification(); };
+
+          document.getElementById('swRange').oninput = (e)=>{ state.settings.seedWeight = parseFloat(e.target.value); document.getElementById('sw').textContent = state.settings.seedWeight.toFixed(1); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: seedWeight','engagement',e.target.value); recomputeClassification(); };
+
+          document.getElementById('stepsRange').oninput = (e)=>{ state.settings.steps = parseInt(e.target.value); document.getElementById('stepsVal').textContent = state.settings.steps; state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: steps','engagement',e.target.value); recomputeClassification(); };
+          document.getElementById('gsRange').oninput = (e)=>{ state.settings.guidanceScale = parseFloat(e.target.value); document.getElementById('gsVal').textContent = state.settings.guidanceScale.toFixed(1); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: guidanceScale','engagement',e.target.value); recomputeClassification(); };
+
+          document.getElementById('ipaEnable').onchange = (e)=>{ state.settings.ipAdapterEnabled = e.target.checked; logEvent('⚙️ IP Adapter toggled','engagement',e.target.checked); renderAll(); recomputeClassification(); };
+          const ipaImage = document.getElementById('ipaImage'); if (ipaImage) ipaImage.onchange = (e)=>{ state.settings.ipAdapterImage = e.target.value; state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: ipAdapterImage','engagement',e.target.value); recomputeClassification(); };
+          const ipawRange = document.getElementById('ipawRange'); if (ipawRange) ipawRange.oninput = (e)=>{ state.settings.ipAdapterWeight = parseFloat(e.target.value); document.getElementById('ipaw').textContent = state.settings.ipAdapterWeight.toFixed(2); state.sessionEngagement.paramChanges++; logEvent('⚙️ Parameter changed: ipAdapterWeight','engagement',e.target.value); recomputeClassification(); };
+
+          document.getElementById('cnEnable').onchange = (e)=>{ state.settings.controlNetActive = e.target.checked; logEvent('⚙️ ControlNet toggled','engagement',e.target.checked); renderAll(); recomputeClassification(); };
+          const addCn = document.getElementById('addCn'); if (addCn) addCn.onclick = ()=>{ logEvent('➕ Add ControlNet model clicked','event'); alert('Add ControlNet model — mock interaction'); };
+
+        }, 0);
+
+      } else if (state.activeTab === 'record'){
+        const panel = document.createElement('div'); panel.className='surface'; panel.style.padding='40px';
+        panel.innerHTML = `<div style="margin-bottom:32px"><h2 style="font-size:24px;margin:0 0 8px;font-weight:600">Your Recordings</h2><p class="muted">Capture your live streams and share them with the community</p></div>`;
+        if (state.recordedClips.length === 0){
+          panel.innerHTML += `<div style="text-align:center;padding:80px 40px;background:var(--bg);border-radius:12px;border:1px dashed var(--border)"><div style="font-size:60px;color:var(--text-secondary);margin-bottom:20px">🎬</div><div style="font-size:18px;font-weight:600;margin-bottom:8px">No recordings yet</div><div class="muted">Start streaming and hit the record button to capture your creations</div></div>`;
+        } else {
+          const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='repeat(auto-fill,minmax(280px,1fr))'; grid.style.gap='20px';
+          state.recordedClips.forEach(clip=>{
+            const card = document.createElement('div'); card.className='record-card';
+            card.innerHTML = `<div class="record-preview">${clip.thumbnail}<div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.8);padding:4px 8px;border-radius:4px;font-size:11px;color:white;font-weight:600">${formatTime(clip.duration)}</div></div>
+              <div style="padding:16px"><div class="small" style="display:flex;align-items:center;gap:6px;margin-bottom:6px">⏱️ ${clip.timestamp}</div><div style="font-size:13px;color:var(--text);margin-bottom:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(clip.prompt)}</div><button class="btn primary" style="width:100%" data-id="${clip.id}">Share to Daydream</button></div>`;
+            grid.appendChild(card);
+          });
+          panel.appendChild(grid);
+          setTimeout(()=>{ panel.querySelectorAll('button.btn.primary').forEach(b=> b.onclick = (e)=>{ const id = e.currentTarget.dataset.id; const clip = state.recordedClips.find(c=>String(c.id)===String(id)); handleShare(clip); }); },0);
+        }
+        wrapper.appendChild(panel);
+      } else if (state.activeTab === 'library'){
+        const panel = document.createElement('div'); panel.className='surface center'; panel.style.padding='60px';
+        panel.innerHTML = `<div style="font-size:80px;color:var(--primary);margin-bottom:24px">👥</div><h2 style="font-size:24px;margin-bottom:12px;font-weight:600">Your Daydream Library</h2><p class="muted" style="max-width:500px;margin:0 auto 32px">Browse, manage, and share your published creations with the community</p><button class="btn primary" id="openProfileBtn">Open Profile on Daydream</button>`;
+        wrapper.appendChild(panel);
+        setTimeout(()=>{ $('#openProfileBtn').onclick = ()=>{ logEvent('🔗 Profile opened','event','destination: daydream.live/u/demo'); alert('Open profile → https://daydream.live/u/demo (mock)'); }; },0);
+      } else if (state.activeTab === 'analytics'){
+        const panel = document.createElement('div'); panel.className='surface'; panel.style.padding='40px';
+        panel.innerHTML = `<div style="margin-bottom:32px"><h2 style="font-size:24px;margin:0 0 8px;font-weight:600">Session Analytics</h2><p class="muted">Track your usage and engagement metrics</p></div>`;
+        const stats = document.createElement('div'); stats.className='grid-3 mb'; stats.innerHTML = `
+          <div class="stat"><div class="small">Total Stream Time</div><div style="font-size:32px;font-weight:600;color:var(--primary)">${formatTime(state.sessionEngagement.totalStreamTime)}</div></div>
+          <div class="stat"><div class="small">Parameter Changes</div><div style="font-size:32px;font-weight:600;color:var(--secondary)">${state.sessionEngagement.paramChanges}</div></div>
+          <div class="stat"><div class="small">Shares Completed</div><div style="font-size:32px;font-weight:600;color:var(--success)">${state.sessionEngagement.sharesCompleted}</div></div>`;
+        panel.appendChild(stats);
+        const breakdown = document.createElement('div'); breakdown.style.background='var(--bg)'; breakdown.style.padding='32px'; breakdown.style.borderRadius='12px'; breakdown.style.border=`1px solid var(--border)`;
+        breakdown.innerHTML = `<h3 style="font-size:16px;font-weight:600;margin-bottom:12px">Engagement Breakdown</h3>
+          <div style="display:grid;gap:12px">
+            <div style="display:flex;justify-content:space-between"><span class="muted">Stream Sessions</span><span style="font-weight:600">${state.sessionEngagement.streamSessions}</span></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Prompt Changes</span><span style="font-weight:600">${state.sessionEngagement.promptChanges}</span></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Recordings Made</span><span style="font-weight:600">${state.sessionEngagement.recordingsMade}</span></div>
+            <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:8px"><div style="font-weight:600;margin-bottom:8px">User Classification</div><div>${createClassificationChip().outerHTML}</div></div>
+          </div>`;
+        panel.appendChild(breakdown);
+        wrapper.appendChild(panel);
+      } else if (state.activeTab === 'about'){
+        const panel = document.createElement('div'); panel.className='surface'; panel.style.padding='40px';
+        panel.innerHTML = `<h2 style="font-size:24px;margin-bottom:32px;font-weight:600">About Daydream TD</h2>
+          <div style="margin-bottom:24px"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px">Version</h3><p class="muted">v1.0.0 • Released December 2024</p></div>
+          <div style="margin-bottom:24px"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px">Documentation</h3><a href="https://docs.daydream.live" onclick="logEvent('📚 Documentation opened','event')" style="color:var(--primary);text-decoration:none;display:inline-flex;align-items:center;gap:6px">View Documentation ↗</a></div>
+          <div style="margin-bottom:24px"><h3 style="font-size:16px;font-weight:600;margin-bottom:8px">Support</h3><button id="reportBtn" class="btn btn-ghost">⚠️ Report an Issue</button></div>
+          <div style="padding:24px;background:var(--bg);border-radius:12px;color:var(--text-secondary)"> <p style="margin:0">Daydream TD brings real-time AI generation to TouchDesigner with sub-second latency, ControlNet support, and seamless community integration.</p><p style="margin-top:16px;margin-bottom:0">Made with ❤️ by the Daydream team</p></div>`;
+        wrapper.appendChild(panel);
+        setTimeout(()=>{ const rb = document.getElementById('reportBtn'); rb.onclick = ()=>{ openReportModal(); logEvent('🐛 Report issue opened','event'); }; },0);
+      }
+
+      main.appendChild(wrapper);
+    }
+
+    // ===== Preview render (for timers) =====
+    function renderPreview(){ /* simply re-render main for simplicity */ renderMain(); renderHeader(); }
+
+    // ===== Event Logger UI =====
+    function renderEventLogger(){
+      const existing = document.getElementById('eventLogger');
+      if (!state.showEventLogger && existing){ existing.remove(); return; }
+      if (!state.showEventLogger){
+        // nothing
+        return;
+      }
+      const container = existing || document.createElement('div');
+      container.id = 'eventLogger';
+      container.className = 'event-logger';
+      container.innerHTML = `<div style="color:#e5e5e5;margin-bottom:12px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:8px">📊 TRACKING EVENTS <span style="margin-left:auto;font-size:10px;color:#666;background:#0a0a0a;padding:2px 8px;border-radius:4px">${state.events.length} events</span></div>`;
+      const list = document.createElement('div');
+      state.events.slice().reverse().forEach(ev=>{
+        const item = document.createElement('div'); item.className='event-item';
+        let leftColor = '#fbbf24';
+        if (ev.type === 'success') leftColor = '#4ade80';
+        else if (ev.type === 'stream') leftColor = '#60a5fa';
+        else if (ev.type === 'warning') leftColor = '#fb923c';
+        else if (ev.type === 'engagement') leftColor = '#a78bfa';
+        item.style.borderLeft = `3px solid ${leftColor}`;
+        item.innerHTML = `<div class="event-time">[${ev.timestamp}]</div><div>${escapeHtml(ev.message)}</div>${ev.metadata? '<div style="margin-top:4px;color:#666;font-size:9px">'+escapeHtml(ev.metadata)+'</div>':''}`;
+        list.appendChild(item);
+      });
+      container.appendChild(list);
+      if (!existing) document.body.appendChild(container);
+    }
+
+    // ===== Modals =====
+    function openAuthModal(){
+      state.showAuthModal = true; state.authStep='initial'; renderModalAuth();
+      logEvent('🔐 Sign in initiated','event');
+    }
+    function closeAuthModal(){ state.showAuthModal=false; renderAll(); }
+
+    function renderModalAuth(){
+      // remove previous
+      const old = document.getElementById('authModal'); if (old) old.remove();
+      if (!state.showAuthModal) return;
+      const backdrop = document.createElement('div'); backdrop.className='modal-backdrop'; backdrop.id='authModal';
+      const modal = document.createElement('div'); modal.className='modal';
+      modal.innerHTML = `<div style="text-align:center;padding-bottom:12px;border-bottom:1px solid var(--border)"><div style="width:80px;height:80px;margin:0 auto 12px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:40px">D</div><h2 style="margin:0 0 8px">Sign in to Daydream</h2><div class="muted">Secure authentication via OAuth 2.0</div></div><div style="padding-top:20px" id="authBody"></div>`;
+      backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      renderAuthBody();
+    }
+
+    function renderAuthBody(){
+      const body = document.getElementById('authBody'); if (!body) return;
+      body.innerHTML = '';
+      if (state.authStep === 'initial'){
+        const p = document.createElement('p'); p.className='muted'; p.style.marginBottom='20px';
+        p.textContent = 'A browser window will open for secure authentication. Your API key will be generated automatically and stored locally.';
+        const openBtn = document.createElement('button'); openBtn.className='btn primary'; openBtn.style.width='100%'; openBtn.textContent='Open Browser & Authenticate';
+        openBtn.onclick = ()=>{ state.authStep='browser-opened'; renderAuthBody(); logEvent('🌐 Browser window opened for OAuth','event'); setTimeout(()=>{ state.authStep='authenticating'; renderAuthBody(); logEvent('⏳ Authenticating with Daydream...','event'); },2000); setTimeout(()=>{ state.authStep='success'; renderAuthBody(); logEvent('✅ Authentication successful','success'); logEvent('🔑 API key generated and stored locally','success'); },4000); };
+        const cancel = document.createElement('button'); cancel.className='btn btn-ghost'; cancel.style.width='100%'; cancel.textContent='Cancel'; cancel.onclick = ()=>{ state.showAuthModal=false; logEvent('❌ Sign in cancelled','event'); renderAll(); };
+        body.appendChild(p); body.appendChild(openBtn); body.appendChild(document.createElement('div')).style.height='8px'; body.appendChild(cancel);
+      } else if (state.authStep === 'browser-opened'){
+        const spinner = document.createElement('div'); spinner.style.width='60px'; spinner.style.height='60px'; spinner.style.margin='0 auto 12px'; spinner.style.borderRadius='50%'; spinner.style.border='3px solid var(--primary)'; spinner.style.borderTopColor='transparent'; spinner.style.animation='spin 1s linear infinite';
+        const title = document.createElement('div'); title.style.fontSize='16px'; title.style.fontWeight='600'; title.style.marginBottom='8px'; title.textContent='Browser window opened';
+        const txt = document.createElement('div'); txt.className='muted'; txt.textContent='Please complete authentication in your browser...';
+        body.appendChild(spinner); body.appendChild(title); body.appendChild(txt);
+      } else if (state.authStep === 'authenticating'){
+        const spinner = document.createElement('div'); spinner.style.width='60px'; spinner.style.height='60px'; spinner.style.margin='0 auto 12px'; spinner.style.borderRadius='50%'; spinner.style.border='3px solid var(--secondary)'; spinner.style.borderTopColor='transparent'; spinner.style.animation='spin 1s linear infinite';
+        const title = document.createElement('div'); title.style.fontSize='16px'; title.style.fontWeight='600'; title.style.marginBottom='8px'; title.textContent='Authenticating...';
+        const txt = document.createElement('div'); txt.className='muted'; txt.textContent='Verifying your credentials with Daydream';
+        body.appendChild(spinner); body.appendChild(title); body.appendChild(txt);
+      } else if (state.authStep === 'success'){
+        const ok = document.createElement('div'); ok.style.width='60px'; ok.style.height='60px'; ok.style.margin='0 auto 12px'; ok.style.borderRadius='50%'; ok.style.background='rgba(34,197,94,.12)'; ok.style.display='flex'; ok.style.alignItems='center'; ok.style.justifyContent='center';
+        ok.innerHTML = '✓';
+        const title = document.createElement('div'); title.style.fontSize='16px'; title.style.fontWeight='600'; title.style.marginBottom='8px'; title.textContent='Authentication Successful!';
+        const txt = document.createElement('div'); txt.className='muted'; txt.textContent='API key generated and stored securely';
+        const cont = document.createElement('button'); cont.className='btn'; cont.style.background='var(--success)'; cont.style.color='white'; cont.style.width='100%'; cont.textContent='Continue to Daydream TD';
+        cont.onclick = ()=>{ state.isAuthenticated = true; state.showAuthModal = false; state.authStep='initial'; logEvent('✓ Login completed','success','user: demo@daydream.live'); logEvent('🎨 Ready to stream!','success'); renderAll(); };
+        body.appendChild(ok); body.appendChild(title); body.appendChild(txt); body.appendChild(document.createElement('div')).style.height='12px'; body.appendChild(cont);
+      }
+    }
+
+    function openReportModal(){ state.showReportModal=true; renderReportModal(); }
+    function renderReportModal(){ const old = document.getElementById('reportModal'); if (old) old.remove(); if (!state.showReportModal) return; const backdrop=document.createElement('div'); backdrop.className='modal-backdrop'; backdrop.id='reportModal'; const modal=document.createElement('div'); modal.className='modal'; modal.innerHTML = `<h2 style="font-size:22px;margin:0 0 12px;font-weight:600">Report an Issue</h2><p class="muted">Context about your session will be automatically included with your report.</p>
+      <div class="muted-block" style="margin:12px 0"><div style="font-weight:600;color:var(--text);margin-bottom:6px">Auto-included context:</div>
+      • Plugin version: v1.0.0<br>• Stream sessions: ${state.sessionEngagement.streamSessions}<br>• Total stream time: ${formatTime(state.sessionEngagement.totalStreamTime)}${state.disconnectReason? '<br>• Last disconnect: '+escapeHtml(state.disconnectReason): ''}</div>
+      <textarea id="reportText" placeholder="Describe what happened..." style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;color:var(--text)"></textarea>
+      <div style="display:flex;gap:12px;margin-top:12px"><button id="submitReport" class="btn primary" style="flex:1">Submit Report</button><button id="cancelReport" class="btn btn-ghost">Cancel</button></div>`; backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      setTimeout(()=>{ document.getElementById('submitReport').onclick = ()=>{ state.showReportModal=false; logEvent('✓ Issue reported','success','ticket created and assigned'); alert('✅ Thank you! Your report has been submitted.\\n\\nTicket #'+Math.floor(Math.random()*10000)+'\\n\\nYou\\'ll receive updates via email at demo@daydream.live'); renderAll(); }; document.getElementById('cancelReport').onclick = ()=>{ state.showReportModal=false; logEvent('❌ Report cancelled','event'); renderAll(); }; },10);
+    }
+
+    // Share flow
+    function handleShare(clip){ state.selectedClip = clip; state.showShareModal=true; renderShareModal(); logEvent('📤 Share initiated','event','clip:'+clip.id); }
+    function renderShareModal(){ const old = document.getElementById('shareModal'); if (old) old.remove(); if (!state.showShareModal || !state.selectedClip) return; const backdrop=document.createElement('div'); backdrop.className='modal-backdrop'; backdrop.id='shareModal'; const modal=document.createElement('div'); modal.className='modal'; modal.innerHTML = `<h2 style="font-size:22px;margin:0 0 12px;font-weight:600">Share to Daydream</h2><p class="muted">Your clip will be published to your profile and the discover feed.</p>
+      <div style="background:var(--bg);padding:16px;border-radius:12px;border:1px solid var(--border);margin-bottom:16px"><div class="small" style="margin-bottom:8px">Preview</div><div style="font-size:14px;color:var(--text);margin-bottom:4px">${escapeHtml(state.selectedClip.prompt)}</div><div class="small">Duration: ${formatTime(state.selectedClip.duration)}</div></div>
+      <label style="display:flex;align-items:flex-start;gap:14px;padding:18px;background:var(--bg);border-radius:12px;border:1px solid var(--border);cursor:pointer;margin-bottom:16px"><input id="includeToe" type="checkbox" checked style="margin-top:2px;width:18px;height:18px"><div><div style="font-weight:600">Include .toe workflow file</div><div class="small muted">Let others remix and build upon your creation (recommended)</div></div></label>
+      <div style="display:flex;gap:12px"><button id="publishBtn" class="btn primary" style="flex:1">Publish to Community</button><button id="cancelShare" class="btn btn-ghost">Cancel</button></div>`;
+      backdrop.appendChild(modal); document.body.appendChild(backdrop);
+      setTimeout(()=>{ document.getElementById('publishBtn').onclick = ()=>{ const include = !!document.getElementById('includeToe').checked; state.showShareModal=false; state.sessionEngagement.sharesCompleted++; logEvent('✓ Share completed','success','workflow included:'+(include?'yes':'no')); logEvent('🚀 Clip published to profile + discover feed','success'); logEvent('🔗 Live at: daydream.live/u/demo/clips/'+state.selectedClip.id,'success'); renderAll(); }; document.getElementById('cancelShare').onclick=()=>{ state.showShareModal=false; logEvent('❌ Share cancelled','event'); renderAll(); }; },10);
+    }
+
+    // ===== Toggles =====
+    function toggleStream(){
+      if (!state.isStreaming){
+        state.isStreaming=true; state.sessionEngagement.streamSessions++; state.sessionEngagement.totalStreamTime = state.streamDuration;
+        logEvent('▶️ Stream started','stream','session #'+state.sessionEngagement.streamSessions);
+        startStreamTimer();
+      } else {
+        state.isStreaming=false; clearInterval(streamInterval);
+        logEvent('⏹️ Stream stopped','stream','duration:'+formatTime(state.streamDuration));
+        // simulate disconnect
+        if (Math.random()>0.8){
+          const reasons = ['Network timeout','GPU resource exhausted','WHIP connection lost','User initiated'];
+          const reason = reasons[Math.floor(Math.random()*reasons.length)];
+          state.disconnectReason = reason; logEvent('⚠️ Disconnect reason: '+reason,'warning');
+        }
+        state.streamDuration = 0;
+      }
+      renderAll();
+    }
+
+    function toggleRecording(){
+      if (!state.isRecording){
+        if (!state.isStreaming) { alert('Start a stream before recording'); return; }
+        state.isRecording=true; state.recordingDuration=0; startRecordTimer(); logEvent('🎬 Recording started','stream');
+      } else {
+        state.isRecording=false; clearInterval(recordInterval);
+        const newClip = { id: Date.now(), duration: state.recordingDuration, timestamp: new Date().toLocaleTimeString(), thumbnail:'🎨', prompt: state.settings.prompt.substring(0,50) };
+        state.recordedClips.push(newClip); state.sessionEngagement.recordingsMade++; logEvent('✓ Recording stopped','success','duration:'+formatTime(state.recordingDuration));
+        state.recordingDuration=0;
+      }
+      renderAll();
+    }
+
+    // ===== Utility & initial render =====
+    function escapeHtml(s){ if(!s && s!=='') return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+    // Event toggle
+    document.getElementById('eventToggle').onclick = ()=>{
+      state.showEventLogger = !state.showEventLogger;
+      document.getElementById('eventToggle').textContent = state.showEventLogger ? '🙈' : '👁️';
+      renderEventLogger();
+    };
+
+    function renderAll(){ renderHeader(); renderMain(); renderEventLogger(); if (state.showAuthModal) renderModalAuth(); if (state.showReportModal) renderReportModal(); if (state.showShareModal) renderShareModal(); }
+
+    function submitReport(){ logEvent('✓ Issue reported','success','ticket created and assigned'); alert('Report submitted (mock)'); }
+
+    // Expose some global functions used in markup
+    window.logEvent = logEvent;
+
+    // initial render
+    renderAll();
+
+    // make sure classification updates when sessionEngagement changes (simple polling)
+    setInterval(recomputeClassification,1000);
+
+    // expose toggles to templates
+    window.toggleStream = toggleStream;
+    window.toggleRecording = toggleRecording;
+
+    // keyboard shortcuts (s start/stop stream, r record)
+    window.addEventListener('keydown',(e)=>{
+      if (e.key==='s') toggleStream();
+      if (e.key==='r') toggleRecording();
+    });
+
+  })();
   </script>
 </body>
 </html>
