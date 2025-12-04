@@ -3,73 +3,1935 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daydream TouchDesigner Plugin Mockup</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="daydream-logo.svg">
-  
-  <!-- Inter Font -->
+  <title>Daydream for TouchDesigner - Plugin Mockup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- React and ReactDOM from CDN -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-  <!-- Babel Standalone for JSX transformation -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-primary: #0a0a0b;
+      --bg-secondary: #111113;
+      --bg-panel: #141416;
+      --bg-card: #1a1a1d;
+      --bg-input: #0d0d0e;
+      --bg-hover: #222226;
+      --border-subtle: #2a2a2e;
+      --border-medium: #3a3a40;
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --text-muted: #6e6e73;
+      --accent-gradient-start: #36619D;
+      --accent-teal: #2FBEC5;
+      --accent-orange: #FF982E;
+      --accent-red: #F73B41;
+      --success: #34C759;
+      --warning: #FF9F0A;
+      --error: #FF453A;
+      --stream-pulse: #FF982E;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
-    body {
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background: #0c0c0c;
-    }
-    
-    #root {
-      width: 100%;
-      min-height: 100vh;
-    }
 
-    /* Loading spinner */
-    .loading {
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a1d;
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 13px;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      color: #b3b3b3;
-      font-family: 'Inter', sans-serif;
+      padding: 40px;
+    }
+
+    /* Plugin Container - Simulates TD Panel */
+    .plugin-container {
+      width: 420px;
+      background: var(--bg-panel);
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      box-shadow: 
+        0 0 0 1px rgba(0,0,0,0.5),
+        0 20px 60px rgba(0,0,0,0.5),
+        0 0 100px rgba(47, 190, 197, 0.05);
+    }
+
+    /* Header */
+    .plugin-header {
+      background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 26px;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .version-badge {
+      font-size: 10px;
+      color: var(--text-muted);
+      background: var(--bg-input);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* User Status */
+    .user-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 10px 2px 2px;
+      background: var(--bg-input);
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-orange) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .user-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* Tabs */
+    .tabs-container {
+      display: flex;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .tab:hover {
+      color: var(--text-secondary);
+    }
+
+    .tab.active {
+      color: var(--text-primary);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 16px;
+      right: 16px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-teal), var(--accent-orange));
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* Panel Content */
+    .panel-content {
+      padding: 16px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .panel-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .panel-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .panel-content::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 3px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .section-toggle {
+      font-size: 10px;
+      color: var(--accent-teal);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* Stream Controls */
+    .stream-controls {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .stream-preview {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg-input);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stream-preview.streaming {
+      border: 2px solid var(--stream-pulse);
+      animation: stream-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes stream-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 46, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(255, 152, 46, 0.4); }
+    }
+
+    .preview-placeholder {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .preview-placeholder svg {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 8px;
+      opacity: 0.5;
+    }
+
+    .stream-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .status-indicator.ready {
+      background: var(--success);
+    }
+
+    .status-indicator.streaming {
+      background: var(--stream-pulse);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .status-indicator.recording {
+      background: var(--error);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .status-time {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .stream-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-orange) 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(47, 190, 197, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg-input);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-medium);
+    }
+
+    .btn-danger {
+      background: var(--error);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #ff5c52;
+    }
+
+    .btn-record {
+      background: transparent;
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    .btn-record:hover {
+      background: rgba(255, 69, 58, 0.1);
+    }
+
+    .btn-record.recording {
+      background: var(--error);
+      color: white;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-value {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      font-size: 10px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-teal);
+      box-shadow: 0 0 0 3px rgba(47, 190, 197, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    /* Slider */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: var(--bg-input);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-orange) 100%);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .slider-value {
+      min-width: 48px;
+      padding: 6px 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .toggle-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .toggle {
+      width: 40px;
+      height: 22px;
+      background: var(--bg-input);
+      border-radius: 11px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .toggle.active {
+      background: var(--accent-teal);
+      border-color: var(--accent-teal);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+
+    .toggle.active::after {
+      transform: translateX(18px);
+    }
+
+    /* Seed Controls */
+    .seed-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .seed-input {
+      flex: 1;
+      padding: 8px 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .seed-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .seed-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .seed-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Collapsible Panel */
+    .collapsible {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .collapsible:last-child {
+      margin-bottom: 0;
+    }
+
+    .collapsible-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .collapsible-header:hover {
+      background: var(--bg-hover);
+    }
+
+    .collapsible-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .collapsible-title svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+
+    .collapsible-toggle {
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .collapsible-toggle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .collapsible.open .collapsible-toggle {
+      transform: rotate(180deg);
+    }
+
+    .collapsible-content {
+      padding: 0 14px 14px;
+      display: none;
+    }
+
+    .collapsible.open .collapsible-content {
+      display: block;
+    }
+
+    /* IP Adapter Section */
+    .ip-image-drop {
+      width: 100%;
+      height: 80px;
+      background: var(--bg-input);
+      border: 1px dashed var(--border-medium);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ip-image-drop:hover {
+      border-color: var(--accent-teal);
+      background: rgba(47, 190, 197, 0.05);
+    }
+
+    .ip-image-drop span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Share Dialog */
+    .share-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .share-preview {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg-input);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-options {
+      margin-bottom: 16px;
+    }
+
+    .share-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .share-option:hover {
+      border-color: var(--border-medium);
+    }
+
+    .share-option.selected {
+      border-color: var(--accent-teal);
+      background: rgba(47, 190, 197, 0.05);
+    }
+
+    .share-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-medium);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-option.selected .share-checkbox {
+      background: var(--accent-teal);
+      border-color: var(--accent-teal);
+    }
+
+    .share-checkbox svg {
+      width: 12px;
+      height: 12px;
+      color: white;
+      display: none;
+    }
+
+    .share-option.selected .share-checkbox svg {
+      display: block;
+    }
+
+    .share-option-text {
+      flex: 1;
+    }
+
+    .share-option-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .share-option-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Login State */
+    .login-panel {
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .login-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, rgba(47, 190, 197, 0.1) 0%, rgba(255, 152, 46, 0.1) 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-icon svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .login-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .login-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .login-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-orange) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(47, 190, 197, 0.3);
+    }
+
+    .login-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Footer */
+    .plugin-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-link {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .footer-link:hover {
+      color: var(--text-secondary);
+    }
+
+    .footer-link svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* State Views */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* Navigation between states */
+    .state-nav {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      background: var(--bg-card);
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      z-index: 100;
+    }
+
+    .state-btn {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .state-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .state-btn.active {
+      color: var(--text-primary);
+      background: linear-gradient(135deg, rgba(47, 190, 197, 0.2) 0%, rgba(255, 152, 46, 0.2) 100%);
+    }
+
+    /* About Tab */
+    .about-content {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .about-logo {
+      width: 80px;
+      height: 74px;
+      margin: 0 auto 16px;
+    }
+
+    .about-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .about-version {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .about-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .about-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .about-link:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-medium);
+    }
+
+    .about-link svg {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+    }
+
+    .about-link span {
+      flex: 1;
+      text-align: left;
+    }
+
+    .about-link .arrow {
+      color: var(--text-muted);
+    }
+
+    /* Report Issue Modal */
+    .report-panel {
+      padding: 16px;
+    }
+
+    .report-success {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .report-success-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      background: rgba(52, 199, 89, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .report-success-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--success);
+    }
+
+    /* Simulated visual preview */
+    .visual-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 2px;
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+    }
+
+    .visual-cell {
+      background: linear-gradient(
+        135deg,
+        rgba(47, 190, 197, 0.3) 0%,
+        rgba(255, 152, 46, 0.3) 50%,
+        rgba(247, 59, 65, 0.3) 100%
+      );
+      border-radius: 2px;
+      animation: cell-pulse 2s ease-in-out infinite;
+    }
+
+    .visual-cell:nth-child(odd) {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes cell-pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
     }
   </style>
 </head>
 <body>
-  <div id="root">
-    <div class="loading">Loading Daydream mockup...</div>
+  <!-- Plugin Container -->
+  <div class="plugin-container">
+    <!-- Header -->
+    <div class="plugin-header">
+      <div class="logo-section">
+        <svg class="logo-icon" viewBox="0 0 90 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M66.5185 18.4265C53.8572 18.4265 43.5932 28.7282 43.5932 41.4364C43.5932 54.1446 53.8572 64.4463 66.5185 64.4463C79.1798 64.4463 89.4438 54.1446 89.4438 41.4364C89.4439 28.7282 79.1798 18.4266 66.5185 18.4265Z" fill="url(#logo-grad-1)"/>
+          <path d="M41.8719 0.381104C30.9833 0.381104 20.5407 4.70658 12.8413 12.406C5.14188 20.1054 0.816406 30.548 0.816406 41.4366C0.816407 52.3252 5.14188 62.7678 12.8413 70.4672C20.5407 78.1666 30.9833 82.4921 41.8719 82.4921V41.4366V0.381104Z" fill="url(#logo-grad-2)"/>
+          <defs>
+            <linearGradient id="logo-grad-1" x1="65.5285" y1="18.4266" x2="65.4583" y2="61.8352" gradientUnits="userSpaceOnUse">
+              <stop offset="0.00113772" stop-color="#36619D"/>
+              <stop offset="0.210396" stop-color="#2FBEC5"/>
+              <stop offset="0.521083" stop-color="#FF982E"/>
+              <stop offset="0.988296" stop-color="#F73B41"/>
+            </linearGradient>
+            <linearGradient id="logo-grad-2" x1="43.6447" y1="0.381108" x2="43.7695" y2="77.8333" gradientUnits="userSpaceOnUse">
+              <stop offset="0.00113772" stop-color="#36619D"/>
+              <stop offset="0.210396" stop-color="#2FBEC5"/>
+              <stop offset="0.521083" stop-color="#FF982E"/>
+              <stop offset="0.988296" stop-color="#F73B41"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">DAYDREAM</span>
+        <span class="version-badge">v1.0.0</span>
+      </div>
+      <div class="header-actions" id="headerActions">
+        <!-- User status appears when logged in -->
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container" id="tabsContainer">
+      <button class="tab active" data-tab="stream">Stream</button>
+      <button class="tab" data-tab="params">Parameters</button>
+      <button class="tab" data-tab="share">Share</button>
+      <button class="tab" data-tab="about">About</button>
+    </div>
+
+    <!-- Panel Content -->
+    <div class="panel-content" id="panelContent">
+      
+      <!-- LOGIN VIEW -->
+      <div class="view" id="view-login">
+        <div class="login-panel">
+          <div class="login-icon">
+            <svg viewBox="0 0 90 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M66.5185 18.4265C53.8572 18.4265 43.5932 28.7282 43.5932 41.4364C43.5932 54.1446 53.8572 64.4463 66.5185 64.4463C79.1798 64.4463 89.4438 54.1446 89.4438 41.4364C89.4439 28.7282 79.1798 18.4266 66.5185 18.4265Z" fill="url(#login-grad-1)"/>
+              <path d="M41.8719 0.381104C30.9833 0.381104 20.5407 4.70658 12.8413 12.406C5.14188 20.1054 0.816406 30.548 0.816406 41.4366C0.816407 52.3252 5.14188 62.7678 12.8413 70.4672C20.5407 78.1666 30.9833 82.4921 41.8719 82.4921V41.4366V0.381104Z" fill="url(#login-grad-2)"/>
+              <defs>
+                <linearGradient id="login-grad-1" x1="65.5285" y1="18.4266" x2="65.4583" y2="61.8352" gradientUnits="userSpaceOnUse">
+                  <stop offset="0.00113772" stop-color="#36619D"/>
+                  <stop offset="0.210396" stop-color="#2FBEC5"/>
+                  <stop offset="0.521083" stop-color="#FF982E"/>
+                  <stop offset="0.988296" stop-color="#F73B41"/>
+                </linearGradient>
+                <linearGradient id="login-grad-2" x1="43.6447" y1="0.381108" x2="43.7695" y2="77.8333" gradientUnits="userSpaceOnUse">
+                  <stop offset="0.00113772" stop-color="#36619D"/>
+                  <stop offset="0.210396" stop-color="#2FBEC5"/>
+                  <stop offset="0.521083" stop-color="#FF982E"/>
+                  <stop offset="0.988296" stop-color="#F73B41"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h2 class="login-title">Welcome to Daydream</h2>
+          <p class="login-desc">Sign in to start streaming real-time AI visuals. Your API key will be created automatically.</p>
+          <button class="login-btn" onclick="simulateLogin()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Sign in with Daydream
+          </button>
+        </div>
+      </div>
+
+      <!-- STREAM VIEW -->
+      <div class="view active" id="view-stream">
+        <div class="section">
+          <div class="stream-controls">
+            <div class="stream-preview" id="streamPreview">
+              <div class="preview-placeholder" id="previewPlaceholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+                <div>Connect input TOP to begin</div>
+              </div>
+              <div class="visual-grid" id="visualGrid" style="display: none;"></div>
+            </div>
+            <div class="stream-status">
+              <div class="status-indicator" id="statusIndicator"></div>
+              <span class="status-text" id="statusText">Ready to stream</span>
+              <span class="status-time" id="statusTime"></span>
+            </div>
+            <div class="stream-buttons">
+              <button class="btn btn-primary" id="streamBtn" onclick="toggleStream()">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Start Stream
+              </button>
+              <button class="btn btn-record" id="recordBtn" onclick="toggleRecord()">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="6"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prompt Section -->
+        <div class="section">
+          <div class="form-group">
+            <label class="form-label">Prompt</label>
+            <textarea class="form-input" placeholder="Describe your visual... e.g., 'neon cyberpunk cityscape, rain, reflections'" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Negative Prompt</label>
+            <input type="text" class="form-input" placeholder="blurry, distorted, low quality" value="blurry, distorted, low quality">
+          </div>
+        </div>
+
+        <!-- Quick Settings -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Quick Settings</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">
+              <span>Denoise Strength</span>
+              <span class="form-value" id="denoiseValue">0.65</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" class="slider" min="0" max="100" value="65" oninput="updateSlider('denoise', this.value)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">
+              <span>Guidance Scale</span>
+              <span class="form-value" id="guidanceValue">1.0</span>
+            </label>
+            <div class="slider-container">
+              <input type="range" class="slider" min="0" max="200" value="100" oninput="updateSlider('guidance', this.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARAMETERS VIEW -->
+      <div class="view" id="view-params">
+        <!-- Model Selection -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Model</span>
+          </div>
+          <select class="form-input" style="cursor: pointer;">
+            <option>StreamDiffusion v2 (Default)</option>
+            <option>SDXL Turbo</option>
+            <option>LCM-LoRA</option>
+          </select>
+        </div>
+
+        <!-- Seed Controls -->
+        <div class="collapsible open">
+          <div class="collapsible-header" onclick="toggleCollapsible(this)">
+            <span class="collapsible-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+              </svg>
+              Seed
+            </span>
+            <span class="collapsible-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </span>
+          </div>
+          <div class="collapsible-content">
+            <div class="form-group">
+              <label class="form-label">Seed Value</label>
+              <div class="seed-controls">
+                <input type="text" class="seed-input" value="241633" id="seedInput">
+                <button class="seed-btn" onclick="randomizeSeed()" title="Randomize">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 4v6h6M23 20v-6h-6"/>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                  </svg>
+                </button>
+                <button class="seed-btn" onclick="lockSeed()" title="Lock">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <span>Seed Noise Multiplier</span>
+                <span class="form-value">0.0</span>
+              </label>
+              <div class="slider-container">
+                <input type="range" class="slider" min="0" max="100" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IP Adapter -->
+        <div class="collapsible">
+          <div class="collapsible-header" onclick="toggleCollapsible(this)">
+            <span class="collapsible-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+              IP Adapter
+            </span>
+            <span class="collapsible-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </span>
+          </div>
+          <div class="collapsible-content">
+            <div class="toggle-row">
+              <span class="toggle-label">Enable IP Adapter</span>
+              <div class="toggle" onclick="toggleSwitch(this)"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">IP Image Input</label>
+              <div class="ip-image-drop">
+                <span>Drop TOP or click to select</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <span>IP Weight</span>
+                <span class="form-value">0.5</span>
+              </label>
+              <div class="slider-container">
+                <input type="range" class="slider" min="0" max="100" value="50">
+              </div>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Use Face ID</span>
+              <div class="toggle" onclick="toggleSwitch(this)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ControlNet -->
+        <div class="collapsible">
+          <div class="collapsible-header" onclick="toggleCollapsible(this)">
+            <span class="collapsible-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              ControlNet
+            </span>
+            <span class="collapsible-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </span>
+          </div>
+          <div class="collapsible-content">
+            <div class="toggle-row">
+              <span class="toggle-label">Enable ControlNet</span>
+              <div class="toggle" onclick="toggleSwitch(this)"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mode</label>
+              <select class="form-input" style="cursor: pointer;">
+                <option>Canny Edge</option>
+                <option>Depth</option>
+                <option>Pose</option>
+                <option>Scribble</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <span>Control Strength</span>
+                <span class="form-value">0.8</span>
+              </label>
+              <div class="slider-container">
+                <input type="range" class="slider" min="0" max="100" value="80">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced -->
+        <div class="collapsible">
+          <div class="collapsible-header" onclick="toggleCollapsible(this)">
+            <span class="collapsible-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Advanced
+            </span>
+            <span class="collapsible-toggle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </span>
+          </div>
+          <div class="collapsible-content">
+            <div class="form-group">
+              <label class="form-label">
+                <span>Delta</span>
+                <span class="form-value">1.0</span>
+              </label>
+              <div class="slider-container">
+                <input type="range" class="slider" min="0" max="200" value="100">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                <span>T Index</span>
+                <span class="form-value">35</span>
+              </label>
+              <div class="slider-container">
+                <input type="range" class="slider" min="0" max="50" value="35">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Resolution</label>
+              <select class="form-input" style="cursor: pointer;">
+                <option>512 × 512</option>
+                <option selected>768 × 768</option>
+                <option>1024 × 1024</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHARE VIEW -->
+      <div class="view" id="view-share">
+        <div class="share-panel">
+          <div class="share-preview">
+            <div class="preview-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2"/>
+              </svg>
+              <div>No recording available</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-input" placeholder="Give your creation a name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description (optional)</label>
+            <textarea class="form-input" placeholder="Describe your workflow, techniques, or inspiration..." rows="2"></textarea>
+          </div>
+          <div class="share-options">
+            <div class="share-option selected" onclick="toggleShareOption(this)">
+              <div class="share-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <div class="share-option-text">
+                <div class="share-option-title">Share to Profile</div>
+                <div class="share-option-desc">Publish to your Daydream profile</div>
+              </div>
+            </div>
+            <div class="share-option selected" onclick="toggleShareOption(this)">
+              <div class="share-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <div class="share-option-text">
+                <div class="share-option-title">Include .toe Workflow</div>
+                <div class="share-option-desc">Let others remix your project</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width: 100%;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            Publish to Daydream
+          </button>
+        </div>
+      </div>
+
+      <!-- ABOUT VIEW -->
+      <div class="view" id="view-about">
+        <div class="about-content">
+          <svg class="about-logo" viewBox="0 0 90 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M66.5185 18.4265C53.8572 18.4265 43.5932 28.7282 43.5932 41.4364C43.5932 54.1446 53.8572 64.4463 66.5185 64.4463C79.1798 64.4463 89.4438 54.1446 89.4438 41.4364C89.4439 28.7282 79.1798 18.4266 66.5185 18.4265Z" fill="url(#about-grad-1)"/>
+            <path d="M41.8719 0.381104C30.9833 0.381104 20.5407 4.70658 12.8413 12.406C5.14188 20.1054 0.816406 30.548 0.816406 41.4366C0.816407 52.3252 5.14188 62.7678 12.8413 70.4672C20.5407 78.1666 30.9833 82.4921 41.8719 82.4921V41.4366V0.381104Z" fill="url(#about-grad-2)"/>
+            <defs>
+              <linearGradient id="about-grad-1" x1="65.5285" y1="18.4266" x2="65.4583" y2="61.8352" gradientUnits="userSpaceOnUse">
+                <stop offset="0.00113772" stop-color="#36619D"/>
+                <stop offset="0.210396" stop-color="#2FBEC5"/>
+                <stop offset="0.521083" stop-color="#FF982E"/>
+                <stop offset="0.988296" stop-color="#F73B41"/>
+              </linearGradient>
+              <linearGradient id="about-grad-2" x1="43.6447" y1="0.381108" x2="43.7695" y2="77.8333" gradientUnits="userSpaceOnUse">
+                <stop offset="0.00113772" stop-color="#36619D"/>
+                <stop offset="0.210396" stop-color="#2FBEC5"/>
+                <stop offset="0.521083" stop-color="#FF982E"/>
+                <stop offset="0.988296" stop-color="#F73B41"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <h2 class="about-title">Daydream for TouchDesigner</h2>
+          <p class="about-version">Version 1.0.0 • Build 2025.1</p>
+          <div class="about-links">
+            <a href="#" class="about-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+              <span>Documentation</span>
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+            <a href="#" class="about-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <span>Get Help</span>
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+            <a href="#" class="about-link" onclick="showReportIssue(); return false;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                <line x1="4" y1="22" x2="4" y2="15"/>
+              </svg>
+              <span>Report Issue</span>
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+            <a href="#" class="about-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              <span>Daydream Website</span>
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORT ISSUE VIEW -->
+      <div class="view" id="view-report">
+        <div class="report-panel">
+          <div class="section-header" style="margin-bottom: 16px;">
+            <span class="section-title">Report an Issue</span>
+            <button class="section-toggle" onclick="switchTab('about')">← Back</button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">What went wrong?</label>
+            <select class="form-input" style="cursor: pointer;">
+              <option>Stream won't start</option>
+              <option>Connection drops</option>
+              <option>Visual glitches</option>
+              <option>Performance issues</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Describe the issue</label>
+            <textarea class="form-input" placeholder="Please provide as much detail as possible..." rows="4"></textarea>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">Include system info & logs</span>
+            <div class="toggle active" onclick="toggleSwitch(this)"></div>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); margin: 8px 0 16px;">Includes: TD version, OS, GPU, recent errors</p>
+          <button class="btn btn-primary" style="width: 100%;" onclick="submitReport()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Send Report
+          </button>
+        </div>
+      </div>
+
+      <!-- REPORT SUCCESS VIEW -->
+      <div class="view" id="view-report-success">
+        <div class="report-success">
+          <div class="report-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h3 style="margin-bottom: 8px;">Report Sent</h3>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">
+            Thanks for reporting this issue. We'll investigate and follow up via email within 24 hours.
+          </p>
+          <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 20px;">
+            Ticket #DD-20250603-4821
+          </p>
+          <button class="btn btn-secondary" onclick="switchTab('about')">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="plugin-footer">
+      <div class="footer-links">
+        <a href="#" class="footer-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          Help
+        </a>
+        <a href="#" class="footer-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          Discord
+        </a>
+      </div>
+      <span class="footer-link" id="usageDisplay" style="cursor: default;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        2.4h / 10h used
+      </span>
+    </div>
   </div>
 
-  <!-- Load the JSX component from external file -->
-  <script type="text/babel" src="daydream-plugin-mockup.jsx"></script>
-  
-  <!-- Initialize Lucide icons after component loads -->
+  <!-- State Navigation (for demo purposes) -->
+  <div class="state-nav">
+    <button class="state-btn" onclick="showState('login')">Login</button>
+    <button class="state-btn active" onclick="showState('loggedin')">Logged In</button>
+    <button class="state-btn" onclick="showState('streaming')">Streaming</button>
+    <button class="state-btn" onclick="showState('recording')">Recording</button>
+  </div>
+
   <script>
-    // Load Lucide icons dynamically
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/lucide@latest';
-    script.onload = () => {
-      if (window.lucide) {
-        window.lucide.createIcons();
+    // State management
+    let isLoggedIn = true;
+    let isStreaming = false;
+    let isRecording = false;
+    let streamTime = 0;
+    let streamTimer = null;
+    let recordTime = 0;
+    let recordTimer = null;
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      
+      const tab = document.querySelector(`[data-tab="${tabName}"]`);
+      if (tab) tab.classList.add('active');
+      
+      const view = document.getElementById(`view-${tabName}`);
+      if (view) view.classList.add('active');
+
+      // Track tab navigation
+      trackEvent('tab_navigation', { tab: tabName });
+    }
+
+    // Simulate login
+    function simulateLogin() {
+      trackEvent('login_initiated', {});
+      
+      // Simulate OAuth popup
+      setTimeout(() => {
+        isLoggedIn = true;
+        document.getElementById('headerActions').innerHTML = `
+          <div class="user-status">
+            <div class="user-avatar">JD</div>
+            <span class="user-name">john_doe</span>
+          </div>
+          <button class="icon-btn" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+        `;
+        switchTab('stream');
+        trackEvent('login_completed', {});
+      }, 1000);
+    }
+
+    // Stream controls
+    function toggleStream() {
+      if (!isStreaming) {
+        startStream();
+      } else {
+        stopStream();
       }
-    };
-    document.head.appendChild(script);
+    }
+
+    function startStream() {
+      isStreaming = true;
+      streamTime = 0;
+      
+      const btn = document.getElementById('streamBtn');
+      const indicator = document.getElementById('statusIndicator');
+      const statusText = document.getElementById('statusText');
+      const preview = document.getElementById('streamPreview');
+      const placeholder = document.getElementById('previewPlaceholder');
+      const visualGrid = document.getElementById('visualGrid');
+      
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="4" width="4" height="16"/>
+          <rect x="14" y="4" width="4" height="16"/>
+        </svg>
+        Stop Stream
+      `;
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-danger');
+      
+      indicator.classList.add('streaming');
+      statusText.textContent = 'Streaming';
+      preview.classList.add('streaming');
+      placeholder.style.display = 'none';
+      
+      // Create visual grid
+      visualGrid.innerHTML = '';
+      visualGrid.style.display = 'grid';
+      for (let i = 0; i < 32; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'visual-cell';
+        cell.style.animationDelay = `${Math.random() * 2}s`;
+        visualGrid.appendChild(cell);
+      }
+      
+      streamTimer = setInterval(updateStreamTime, 1000);
+      
+      trackEvent('stream_start', { timestamp: Date.now() });
+    }
+
+    function stopStream() {
+      isStreaming = false;
+      clearInterval(streamTimer);
+      
+      const btn = document.getElementById('streamBtn');
+      const indicator = document.getElementById('statusIndicator');
+      const statusText = document.getElementById('statusText');
+      const statusTime = document.getElementById('statusTime');
+      const preview = document.getElementById('streamPreview');
+      const placeholder = document.getElementById('previewPlaceholder');
+      const visualGrid = document.getElementById('visualGrid');
+      
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Start Stream
+      `;
+      btn.classList.remove('btn-danger');
+      btn.classList.add('btn-primary');
+      
+      indicator.classList.remove('streaming');
+      statusText.textContent = 'Ready to stream';
+      statusTime.textContent = '';
+      preview.classList.remove('streaming');
+      placeholder.style.display = 'flex';
+      visualGrid.style.display = 'none';
+      
+      if (isRecording) {
+        stopRecord();
+      }
+      
+      trackEvent('stream_stop', { duration: streamTime });
+    }
+
+    function updateStreamTime() {
+      streamTime++;
+      const mins = Math.floor(streamTime / 60);
+      const secs = streamTime % 60;
+      document.getElementById('statusTime').textContent = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Recording
+    function toggleRecord() {
+      if (!isRecording) {
+        startRecord();
+      } else {
+        stopRecord();
+      }
+    }
+
+    function startRecord() {
+      if (!isStreaming) {
+        alert('Start streaming first to record');
+        return;
+      }
+      
+      isRecording = true;
+      recordTime = 0;
+      
+      const btn = document.getElementById('recordBtn');
+      const indicator = document.getElementById('statusIndicator');
+      const statusText = document.getElementById('statusText');
+      
+      btn.classList.add('recording');
+      indicator.classList.remove('streaming');
+      indicator.classList.add('recording');
+      statusText.textContent = 'Recording';
+      
+      recordTimer = setInterval(updateRecordTime, 1000);
+      
+      trackEvent('recording_start', { timestamp: Date.now() });
+    }
+
+    function stopRecord() {
+      isRecording = false;
+      clearInterval(recordTimer);
+      
+      const btn = document.getElementById('recordBtn');
+      const indicator = document.getElementById('statusIndicator');
+      const statusText = document.getElementById('statusText');
+      
+      btn.classList.remove('recording');
+      indicator.classList.remove('recording');
+      
+      if (isStreaming) {
+        indicator.classList.add('streaming');
+        statusText.textContent = 'Streaming';
+      } else {
+        statusText.textContent = 'Ready to stream';
+      }
+      
+      trackEvent('recording_stop', { duration: recordTime });
+    }
+
+    function updateRecordTime() {
+      recordTime++;
+    }
+
+    // Collapsible panels
+    function toggleCollapsible(header) {
+      const collapsible = header.parentElement;
+      collapsible.classList.toggle('open');
+      
+      trackEvent('parameter_panel_toggle', { 
+        panel: header.querySelector('.collapsible-title').textContent.trim(),
+        state: collapsible.classList.contains('open') ? 'open' : 'closed'
+      });
+    }
+
+    // Toggle switch
+    function toggleSwitch(toggle) {
+      toggle.classList.toggle('active');
+      
+      const label = toggle.parentElement.querySelector('.toggle-label').textContent;
+      trackEvent('toggle_change', { 
+        setting: label,
+        value: toggle.classList.contains('active')
+      });
+    }
+
+    // Slider updates
+    function updateSlider(name, value) {
+      const displayValue = name === 'denoise' ? (value / 100).toFixed(2) : (value / 100).toFixed(1);
+      document.getElementById(`${name}Value`).textContent = displayValue;
+      
+      trackEvent('parameter_change', { parameter: name, value: displayValue });
+    }
+
+    // Seed controls
+    function randomizeSeed() {
+      const newSeed = Math.floor(Math.random() * 999999);
+      document.getElementById('seedInput').value = newSeed;
+      trackEvent('seed_randomize', { newSeed });
+    }
+
+    function lockSeed() {
+      trackEvent('seed_lock', { seed: document.getElementById('seedInput').value });
+    }
+
+    // Share options
+    function toggleShareOption(option) {
+      option.classList.toggle('selected');
+      
+      const title = option.querySelector('.share-option-title').textContent;
+      trackEvent('share_option_toggle', { 
+        option: title,
+        selected: option.classList.contains('selected')
+      });
+    }
+
+    // Report issue
+    function showReportIssue() {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-report').classList.add('active');
+      trackEvent('report_issue_opened', {});
+    }
+
+    function submitReport() {
+      trackEvent('report_issue_submitted', {});
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-report-success').classList.add('active');
+    }
+
+    // State demonstration (for mockup navigation)
+    function showState(state) {
+      document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      switch(state) {
+        case 'login':
+          isLoggedIn = false;
+          document.getElementById('headerActions').innerHTML = '';
+          document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+          document.getElementById('view-login').classList.add('active');
+          break;
+          
+        case 'loggedin':
+          simulateLogin();
+          if (isStreaming) stopStream();
+          break;
+          
+        case 'streaming':
+          if (!isLoggedIn) simulateLogin();
+          setTimeout(() => {
+            if (!isStreaming) startStream();
+            if (isRecording) stopRecord();
+          }, isLoggedIn ? 0 : 1100);
+          break;
+          
+        case 'recording':
+          if (!isLoggedIn) simulateLogin();
+          setTimeout(() => {
+            if (!isStreaming) startStream();
+            setTimeout(() => {
+              if (!isRecording) startRecord();
+            }, 100);
+          }, isLoggedIn ? 0 : 1100);
+          break;
+      }
+    }
+
+    // Analytics tracking (simulated)
+    function trackEvent(eventName, data) {
+      console.log(`[TRACK] ${eventName}:`, data);
+      // In production, this would send to analytics service
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set initial logged in state
+      if (isLoggedIn) {
+        document.getElementById('headerActions').innerHTML = `
+          <div class="user-status">
+            <div class="user-avatar">JD</div>
+            <span class="user-name">john_doe</span>
+          </div>
+          <button class="icon-btn" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+        `;
+      }
+      
+      trackEvent('plugin_load', { version: '1.0.0', referrer: 'direct' });
+    });
   </script>
 </body>
 </html>
