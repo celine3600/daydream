@@ -1,4 +1,4 @@
-# 🎨 Daydream TouchDesigner Plugin Mockup
+# 🎨 Daydream TouchDesigner Plugin Requirement
 
 ## Overview
 
