@@ -61,7 +61,7 @@ Download → Open in TD → Sign In Daydream→ Start Streaming→ Tweak paramet
 | New AI Features | Weeks long | Day-one support |
 | Recording | External tools | Built-in |
 | Sharing | Manual | Integrated |
-| Support | GitHub issues | In-app tickets |
+| Support | Manually in discord | In-app tickets |
 
 ## Documentation (Link to the About tab)
 
