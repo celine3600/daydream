@@ -36,7 +36,7 @@ Download → Open in TD → Sign In Daydream→ Start Streaming→ Tweak paramet
 
 2. **Connect Input** — Wire/drag any files to the plugin's input. Webcam, video, generative visuals — anything works.
 
-3. **Start Streaming** — Click "Start Stream" and watch your input transform in real-time.Make sure to select the models and resolution you want
+3. **Start Streaming** — Click "Start Stream" and watch your input transform in real-time.
 
 4. **Iterate/Tweak Parameters** — Adjust prompts, controlnets, and other parameters to dial in your look in real time.
 
