@@ -20,19 +20,19 @@ Daydream for TouchDesigner is the official plugin for creating real-time AI-gene
 2. Have a Derivative account- https://derivative.ca/user/register
 
 ## Installation
-1. **Download** the latest `.tox` file from Releases
+1. **Download** the latest `.tox` file from the release
 2. **Open** the project file in TouchDesigner 2025+ 
 3. **Done** — no additional dependencies required
 
 ## Quick Start User journey
 
 ```
-Download → Open in TD → Sign In Daydream→ Start Streaming→ Tweak parameters-> Record → Share
+Download TD Plugin→ Login to Daydream→ Start Streaming→ Tweak parameters-> Record → Share
 ```
 
 ### Step-by-Step
 
-1. **Sign In** — Click "Sign in with Daydream" in the plugin panel. A browser window opens for authentication. Your API key is generated and stored automatically.
+1. **Sign In** — Click "Login to Daydream" in the in the Stream tab of the plugin. A browser window opens for authentication. Your API key is generated and stored automatically.
 
 2. **Connect Input** — Wire/drag any files to the plugin's input. Webcam, video, generative visuals — anything works.
 
@@ -40,28 +40,30 @@ Download → Open in TD → Sign In Daydream→ Start Streaming→ Tweak paramet
 
 4. **Iterate/Tweak Parameters** — Adjust prompts, controlnets, and other parameters to dial in your look in real time.
 
-5. **Record & Share** — Capture clips directly in the plugin and publish to your Daydream profile.
+5. **Record** — Choose your recording style (Input + Output side-by-side, or Output only), then click "Start Recording.
+   
+6. **Share** — Capture clips directly in the plugin and publish to your Daydream profile/community hub.
 
 ## Features
 
 ### Core Capabilities
 
 - **Real-time Streaming** — Sub-second latency AI image generation
-- **Multiple Models** — StreamDiffusion v2, SDXL Turbo, LCM-LoRA
+- **Multiple Models** — SDXL, SD Turbo, SD1.5 are all supported
 - **IP Adapter** — Style transfer from reference images with Face ID support (SDXL model)
 - **Multi-ControlNet** — Canny, Depth, Pose, and Scribble modes and more
 - **In-App Recording** — Capture output clips without leaving TouchDesigner
 - **One-Click Sharing** — Publish to your Daydream profile with optional .toe workflow
-
-### What's New vs StreamDiffusionTD
+  
+### What's New with this plugin vs StreamDiffusionTD
 
 | Feature | StreamDiffusionTD | Daydream |
 |---------|-------------------|----------|
 | Authentication | Copy/paste API key | OAuth (automatic) |
-| New AI Features | Weeks long | Day-one support |
+| Latest streamdiffusion model access | Weeks long | Day-one support |
 | Recording | External tools | Built-in |
-| Sharing | Manual | Integrated |
-| Support | Manually in discord | In-app tickets |
+| Sharing | Manual export| Integrated |
+| Support | Manually in discord | Timely in-app tickets |
 
 ## Documentation (Link to the About tab)
 
@@ -81,6 +83,6 @@ Use the **Report Issue** button in the About tab, it links to the bug report we 
 
 ### Community
 
-- **[Discord](https://discord.gg/daydream)** — Chat with the community
+- **[Discord](https://discord.gg/BXCapAyn)** — Chat with the community
 
 
